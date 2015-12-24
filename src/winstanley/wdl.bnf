@@ -1,0 +1,38 @@
+{
+  parserClass="winstanley.parser.WdlParser"
+
+  extends="com.intellij.extapi.psi.ASTWrapperPsiElement"
+
+  psiClassPrefix="Wdl"
+  psiImplClassSuffix="Impl"
+  psiPackage="winstanley.psi"
+  psiImplPackage="winstanley.psi.impl"
+
+  elementTypeHolderClass="winstanley.psi.WdlTypes"
+  elementTypeClass="winstanley.psi.WdlElementType"
+  tokenTypeClass="winstanley.psi.WdlTokenType"
+}
+
+wdlFile ::= item_*
+
+private item_ ::= property|COMMENT|CRLF)
+
+property ::= (KEY? SEPARATOR VALUE?) | KEY
+
+workflow_block ::= WORKFLOW IDENTIFIER LBRACE wf_body_element* RBRACE
+
+wf_body_element ::= CALL FQN alias?
+
+alias ::= AS IDENTIFIER
+
+//    # Workflows: https://github.com/broadinstitute/wdl/blob/wdl2/SPEC.md#workflow-definition
+//    $workflow = :workflow :identifier :lbrace list($wf_body_element) :rbrace -> Workflow(name=$1, body=$3)
+//    $wf_body_element = $call | $declaration | $while_loop | $if_stmt | $scatter | $wf_outputs
+//    $call = :call :fqn optional($alias) optional($call_body) -> Call(task=$1, alias=$2, body=$3)
+//    $call_body = :lbrace list($declaration) list($call_input) :rbrace -> CallBody(declarations=$1, io=$2)
+//    $call_input = :input :colon list($mapping, :comma) -> Inputs(map=$2)
+//    $mapping = :identifier :equal $e -> IOMapping(key=$0, value=$2)
+//    $alias = :as :identifier -> $1
+//    $wf_outputs = :output :lbrace list($wf_output) :rbrace -> WorkflowOutputs(outputs=$2)
+//    $wf_output = :fqn optional($wf_output_wildcard) -> WorkflowOutput(fqn=$0, wildcard=$1)
+//    $wf_output_wildcard = :dot :asterisk -> $1
