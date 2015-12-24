@@ -24,8 +24,38 @@ public class WdlWfBodyElementImpl extends ASTWrapperPsiElement implements WdlWfB
 
   @Override
   @Nullable
-  public WdlAlias getAlias() {
-    return findChildByClass(WdlAlias.class);
+  public WdlCallBlock getCallBlock() {
+    return findChildByClass(WdlCallBlock.class);
+  }
+
+  @Override
+  @Nullable
+  public WdlDeclaration getDeclaration() {
+    return findChildByClass(WdlDeclaration.class);
+  }
+
+  @Override
+  @Nullable
+  public WdlIfStmt getIfStmt() {
+    return findChildByClass(WdlIfStmt.class);
+  }
+
+  @Override
+  @Nullable
+  public WdlScatterBlock getScatterBlock() {
+    return findChildByClass(WdlScatterBlock.class);
+  }
+
+  @Override
+  @Nullable
+  public WdlWfOutputs getWfOutputs() {
+    return findChildByClass(WdlWfOutputs.class);
+  }
+
+  @Override
+  @Nullable
+  public WdlWhileLoop getWhileLoop() {
+    return findChildByClass(WdlWhileLoop.class);
   }
 
 }

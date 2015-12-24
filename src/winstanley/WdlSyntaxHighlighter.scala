@@ -10,21 +10,65 @@ import com.intellij.psi.tree.IElementType
 import winstanley.psi.WdlTypes
 import org.jetbrains.annotations.NotNull
 
-import com.intellij.openapi.editor.colors.TextAttributesKey.createTextAttributesKey
+import com.intellij.openapi.editor.colors.TextAttributesKey._
 
 object WdlSyntaxHighlighter {
-  val SEPARATOR: TextAttributesKey = createTextAttributesKey("SIMPLE_SEPARATOR", DefaultLanguageHighlighterColors.OPERATION_SIGN)
-  val KEY: TextAttributesKey = createTextAttributesKey("SIMPLE_KEY", DefaultLanguageHighlighterColors.KEYWORD)
-  val VALUE: TextAttributesKey = createTextAttributesKey("SIMPLE_VALUE", DefaultLanguageHighlighterColors.STRING)
-  val COMMENT: TextAttributesKey  = createTextAttributesKey("SIMPLE_COMMENT", DefaultLanguageHighlighterColors.LINE_COMMENT)
-  val BAD_CHARACTER: TextAttributesKey = createTextAttributesKey("SIMPLE_BAD_CHARACTER", HighlighterColors.BAD_CHARACTER)
 
-  val BAD_CHAR_KEYS: Array[TextAttributesKey] = Seq(BAD_CHARACTER).toArray
-  val SEPARATOR_KEYS: Array[TextAttributesKey]  = Seq(SEPARATOR).toArray
-  val KEY_KEYS: Array[TextAttributesKey]  = Seq(KEY).toArray
-  val VALUE_KEYS: Array[TextAttributesKey]  = Seq(VALUE).toArray
-  val COMMENT_KEYS: Array[TextAttributesKey]  = Seq(COMMENT).toArray
-  val EMPTY_KEYS: Array[TextAttributesKey] = Seq.empty[TextAttributesKey].toArray
+  val mappings = Map (
+    WdlTypes.QUOTE -> DefaultLanguageHighlighterColors.STRING,
+    WdlTypes.QUOTE_STRING_CHAR -> DefaultLanguageHighlighterColors.STRING,
+    WdlTypes.ESCAPE_SEQUENCE -> DefaultLanguageHighlighterColors.VALID_STRING_ESCAPE,
+    WdlTypes.COMMAND_CHAR -> DefaultLanguageHighlighterColors.CONSTANT,
+    WdlTypes.BOOLEAN -> DefaultLanguageHighlighterColors.CONSTANT,
+    WdlTypes.NUMBER -> DefaultLanguageHighlighterColors.NUMBER,
+    WdlTypes.TYPE -> DefaultLanguageHighlighterColors.METADATA,
+    WdlTypes.LBRACE -> DefaultLanguageHighlighterColors.BRACES,
+    WdlTypes.RBRACE -> DefaultLanguageHighlighterColors.BRACES,
+    WdlTypes.LPAREN -> DefaultLanguageHighlighterColors.PARENTHESES,
+    WdlTypes.RPAREN -> DefaultLanguageHighlighterColors.PARENTHESES,
+    WdlTypes.COLON -> DefaultLanguageHighlighterColors.OPERATION_SIGN,
+    WdlTypes.EQUAL -> DefaultLanguageHighlighterColors.OPERATION_SIGN,
+    WdlTypes.DOT -> DefaultLanguageHighlighterColors.OPERATION_SIGN,
+    WdlTypes.QMARK -> DefaultLanguageHighlighterColors.OPERATION_SIGN,
+    WdlTypes.PLUS -> DefaultLanguageHighlighterColors.OPERATION_SIGN,
+    WdlTypes.DASH -> DefaultLanguageHighlighterColors.OPERATION_SIGN,
+    WdlTypes.ASTERISK -> DefaultLanguageHighlighterColors.OPERATION_SIGN,
+    WdlTypes.SLASH -> DefaultLanguageHighlighterColors.OPERATION_SIGN,
+    WdlTypes.PERCENT -> DefaultLanguageHighlighterColors.OPERATION_SIGN,
+    WdlTypes.LOGICAL_NOT -> DefaultLanguageHighlighterColors.OPERATION_SIGN,
+    WdlTypes.DOUBLE_EQUAL -> DefaultLanguageHighlighterColors.OPERATION_SIGN,
+    WdlTypes.NOT_EQUAL -> DefaultLanguageHighlighterColors.OPERATION_SIGN,
+    WdlTypes.DOUBLE_AMPERSAND -> DefaultLanguageHighlighterColors.OPERATION_SIGN,
+    WdlTypes.DOUBLE_PIPE -> DefaultLanguageHighlighterColors.OPERATION_SIGN,
+    WdlTypes.LESS_THAN -> DefaultLanguageHighlighterColors.OPERATION_SIGN,
+    WdlTypes.LESS_EQUAL -> DefaultLanguageHighlighterColors.OPERATION_SIGN,
+    WdlTypes.MORE_THAN -> DefaultLanguageHighlighterColors.OPERATION_SIGN,
+    WdlTypes.MORE_EQUAL -> DefaultLanguageHighlighterColors.OPERATION_SIGN,
+    WdlTypes.NOT_EQUAL -> DefaultLanguageHighlighterColors.OPERATION_SIGN,
+    WdlTypes.COMMA -> DefaultLanguageHighlighterColors.COMMA,
+    WdlTypes.COMMENT -> DefaultLanguageHighlighterColors.LINE_COMMENT,
+    WdlTypes.IMPORT -> DefaultLanguageHighlighterColors.KEYWORD,
+    WdlTypes.WORKFLOW -> DefaultLanguageHighlighterColors.KEYWORD,
+    WdlTypes.WORKFLOW_IDENTIFIER_DECL -> DefaultLanguageHighlighterColors.FUNCTION_DECLARATION,
+    WdlTypes.CALL -> DefaultLanguageHighlighterColors.KEYWORD,
+    WdlTypes.AS -> DefaultLanguageHighlighterColors.KEYWORD,
+    WdlTypes.INPUT -> DefaultLanguageHighlighterColors.KEYWORD,
+    WdlTypes.OUTPUT -> DefaultLanguageHighlighterColors.KEYWORD,
+    WdlTypes.WHILE -> DefaultLanguageHighlighterColors.KEYWORD,
+    WdlTypes.IF -> DefaultLanguageHighlighterColors.KEYWORD,
+    WdlTypes.SCATTER -> DefaultLanguageHighlighterColors.KEYWORD,
+    WdlTypes.IN -> DefaultLanguageHighlighterColors.KEYWORD,
+    WdlTypes.TASK -> DefaultLanguageHighlighterColors.KEYWORD,
+    WdlTypes.TASK_IDENTIFIER_DECL -> DefaultLanguageHighlighterColors.FUNCTION_DECLARATION,
+    WdlTypes.COMMAND -> DefaultLanguageHighlighterColors.KEYWORD,
+    WdlTypes.SEP -> DefaultLanguageHighlighterColors.KEYWORD,
+    WdlTypes.RUNTIME -> DefaultLanguageHighlighterColors.KEYWORD,
+    WdlTypes.PARAMETER_META -> DefaultLanguageHighlighterColors.KEYWORD,
+    WdlTypes.META -> DefaultLanguageHighlighterColors.KEYWORD,
+    WdlTypes.OBJECT -> DefaultLanguageHighlighterColors.KEYWORD,
+    TokenType.BAD_CHARACTER -> HighlighterColors.BAD_CHARACTER
+  )
+
 }
 
 class WdlSyntaxHighlighter extends SyntaxHighlighterBase {
@@ -34,13 +78,12 @@ class WdlSyntaxHighlighter extends SyntaxHighlighterBase {
 
   @NotNull
   override def getTokenHighlights(tokenType: IElementType): Array[TextAttributesKey] = {
-    tokenType match {
-      case WdlTypes.SEPARATOR => SEPARATOR_KEYS
-      case WdlTypes.KEY => KEY_KEYS
-      case WdlTypes.VALUE => VALUE_KEYS
-      case WdlTypes.COMMENT => COMMENT_KEYS
-      case TokenType.BAD_CHARACTER => BAD_CHAR_KEYS
-      case _ => EMPTY_KEYS
+    mappings find {
+      case (token, colors) =>
+        tokenType.equals(token)
+    } map { _._2} match {
+      case Some(x) => Seq(createTextAttributesKey(tokenType.toString, x)).toArray
+      case None => Array.empty[TextAttributesKey]
     }
   }
 }

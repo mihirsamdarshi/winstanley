@@ -8,6 +8,21 @@ import com.intellij.psi.PsiElement;
 public interface WdlWfBodyElement extends PsiElement {
 
   @Nullable
-  WdlAlias getAlias();
+  WdlCallBlock getCallBlock();
+
+  @Nullable
+  WdlDeclaration getDeclaration();
+
+  @Nullable
+  WdlIfStmt getIfStmt();
+
+  @Nullable
+  WdlScatterBlock getScatterBlock();
+
+  @Nullable
+  WdlWfOutputs getWfOutputs();
+
+  @Nullable
+  WdlWhileLoop getWhileLoop();
 
 }
