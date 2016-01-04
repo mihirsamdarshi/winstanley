@@ -58,25 +58,23 @@ type_e ::= TYPE (LSQUARE type_e (COMMA type_e)* RSQUARE)?
 
 string_literal ::= QUOTE (QUOTE_STRING_CHAR|ESCAPE_SEQUENCE)* QUOTE
 
-expression ::=  value expression_dash | LPAREN expression RPAREN expression_dash | LPAREN expression RPAREN |
-                LOGICAL_NOT expression | PLUS expression | DASH expression | function_call | array_or_map_lookup |
-                member_access | object_literal | map_literal | array_literal
-expression_dash ::= (infix_operator expression expression_dash)?
+expression ::= ( function_call | array_or_map_lookup | member_access | object_literal | map_literal | array_literal | value |
+                 LPAREN expression RPAREN | LOGICAL_NOT expression | PLUS expression | DASH expression
+               ) expression_dash?
+expression_dash ::= infix_operator expression
 infix_operator ::= DOUBLE_PIPE | DOUBLE_AMPERSAND | DOUBLE_EQUAL | NOT_EQUAL | LESS_THAN | LESS_EQUAL | MORE_THAN |
                     MORE_EQUAL | PLUS | DASH | ASTERISK | SLASH | PERCENT
-function_call ::= IDENTIFIER LPAREN expression (COMMA expression)* RPAREN
+function_call ::= IDENTIFIER LPAREN (expression (COMMA expression)*)? RPAREN
 array_or_map_lookup ::= IDENTIFIER LSQUARE expression RSQUARE
 member_access ::= IDENTIFIER DOT IDENTIFIER
-object_literal ::= OBJECT LBRACE map_kv (COMMA map_kv)* RBRACE
+object_literal ::= OBJECT LBRACE object_kv (COMMA object_kv)* RBRACE
 map_literal ::= LBRACE map_kv (COMMA map_kv)* RBRACE
 array_literal ::= LSQUARE expression (COMMA expression)* RSQUARE
 
 map_kv ::= expression COLON expression
+object_kv ::= IDENTIFIER COLON expression
 value ::= string_literal | IDENTIFIER | BOOLEAN | float_value | integer_value
 float_value ::= NUMBER+ DOT NUMBER+
 integer_value ::= NUMBER+
 
 fqn ::= IDENTIFIER (DOT IDENTIFIER)*
-
-// TODO: Oops, did I miss this??
-//    $object_kv = :identifier :colon $e -> ObjectKV(key=$0, value=$2)
