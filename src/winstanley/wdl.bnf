@@ -22,7 +22,7 @@ import_namespace ::= AS IDENTIFIER
 
 workflow_block ::= WORKFLOW WORKFLOW_IDENTIFIER_DECL LBRACE wf_body_element* RBRACE
 wf_body_element ::= call_block | declaration | while_loop | if_stmt | scatter_block | wf_outputs
-call_block ::= CALL fqn alias? LBRACE call_body RBRACE
+call_block ::= CALL fqn alias? (LBRACE call_body RBRACE)?
 call_body ::= declaration* call_input*
 call_input ::= INPUT COLON (mapping (COMMA mapping)*)?
 mapping ::= IDENTIFIER EQUAL expression
