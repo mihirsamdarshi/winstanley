@@ -2,10 +2,12 @@
   <id>org.broadinstitute.winstanley</id>
   <name>Winstanley WDL</name>
   <version>0.1</version>
-  <vendor email="wdl@broadinstitute.org">WDL at Broad Institute</vendor>
+  <vendor email="workflow-description-language@googlegroups.com">WDL at Broad Institute</vendor>
 
   <description><![CDATA[
-      Winstanley provides WDL language support to the IntelliJ IDEA IDE
+      Winstanley provides WDL language support to the IntelliJ IDEA IDE.
+      For the WDL language specification, see https://github.com/broadinstitute/wdl.
+      For a workflow engine runner which supports WDL, see https://github.com/broadinstitute/cromwell.
     ]]></description>
 
   <change-notes><![CDATA[
