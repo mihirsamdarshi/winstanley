@@ -1,8 +1,8 @@
 <idea-plugin version="2">
   <id>org.broadinstitute.winstanley</id>
-  <name>Winstanley</name>
-  <version>1.0</version>
-  <vendor email="cromwell@broadinstitute.org" url="http://www.broadinstitute.org">Broad Institute</vendor>
+  <name>Winstanley WDL</name>
+  <version>0.1</version>
+  <vendor email="wdl@broadinstitute.org">WDL at Broad Institute</vendor>
 
   <description><![CDATA[
       Winstanley provides WDL language support to the IntelliJ IDEA IDE
