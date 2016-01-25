@@ -1,7 +1,7 @@
 <idea-plugin version="2">
   <id>org.broadinstitute.winstanley</id>
   <name>Winstanley WDL</name>
-  <version>0.1.2</version>
+  <version>0.1.3-SNAPSHOT</version>
   <vendor email="workflow-description-language@googlegroups.com">WDL at Broad Institute</vendor>
 
   <description><![CDATA[

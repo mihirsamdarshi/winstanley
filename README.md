@@ -3,6 +3,8 @@
 This plug-in currently supports:
 * Syntax highlighting
 
+Winstanley is open sourced under the BSD 3-Clause license.
+
 ## Getting Started
 
 ### As a Plug-in User
