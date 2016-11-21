@@ -27,7 +27,7 @@
   <extensions defaultExtensionNs="com.intellij">
     <fileTypeFactory implementation="winstanley.WdlFileTypeFactory"/>
     <lang.parserDefinition language="wdl" implementationClass="winstanley.WdlParserDefinition"/>
-    <lang.syntaxHighlighterFactory language="wdl" key="wdl" implementationClass="winstanley.WdlSyntaxHighlighterFactory"/>
+    <lang.syntaxHighlighterFactory language="wdl" implementationClass="winstanley.WdlSyntaxHighlighterFactory"/>
     <colorSettingsPage implementation="winstanley.WdlColorSettingsPage"/>
   </extensions>
 
