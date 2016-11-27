@@ -28,7 +28,9 @@ call_input ::= INPUT COLON (mapping (COMMA mapping)*)?
 mapping ::= IDENTIFIER EQUAL expression
 alias ::= AS IDENTIFIER
 wf_outputs ::= OUTPUT LBRACE wf_output* RBRACE
-wf_output ::= fqn wf_output_wildcard?
+wf_output ::= wf_output_declaration | wf_output_wildcard_statement
+wf_output_declaration ::= type_e IDENTIFIER EQUAL expression
+wf_output_wildcard_statement ::= fqn wf_output_wildcard?
 wf_output_wildcard ::= DOT ASTERISK
 
 while_loop ::= WHILE LPAREN expression RPAREN LBRACE wf_body_element* RBRACE
