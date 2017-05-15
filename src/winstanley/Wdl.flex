@@ -27,7 +27,10 @@ BOOLEAN="true"|"false"
 NUMBER="0"|"1"|"2"|"3"|"4"|"5"|"6"|"7"|"8"|"9"
 
 WHITE_SPACE= \n|\r|\r\n|\ |\t|\f
-TYPE="Array"|"Map"|"Object"|"Boolean"|"Int"|"Float"|"Uri"|"File"|"String"|"Pair"
+PRIMITIVE="Object"|"Boolean"|"Int"|"Float"|"Uri"|"File"|"String"
+ARRAY="Array"
+PAIR="Pair"
+MAP_TYPE="Map"
 LBRACE="{"
 RBRACE="}"
 TRIPLE_ANGLE_OPEN="<<<"
@@ -41,7 +44,7 @@ DOUBLE_EQUAL="=="
 NOT_EQUAL="!="
 EQUAL="="
 DOT="."
-QMARK="\\?"
+QMARK="?"
 PLUS="+"
 DASH="-"
 ASTERISK=\*
@@ -122,7 +125,10 @@ SEP="sep"
 <COMMAND2_VAR_D_QUOTE> {D_QUOTE_CHAR}                  { yybegin(COMMAND2_VAR); return WdlTypes.QUOTE; }
 <COMMAND2_VAR_S_QUOTE> {S_QUOTE_CHAR}                  { yybegin(COMMAND2_VAR); return WdlTypes.QUOTE; }
 
-<YYINITIAL, COMMAND1_VAR, COMMAND2_VAR> {TYPE}         { return WdlTypes.TYPE; }
+<YYINITIAL> {PRIMITIVE}         { return WdlTypes.PRIMITIVE;}
+<YYINITIAL> {MAP_TYPE}         { return WdlTypes.MAP_TYPE;}
+<YYINITIAL> {ARRAY}         { return WdlTypes.ARRAY;}
+<YYINITIAL> {PAIR}         { return WdlTypes.PAIR;}
 <YYINITIAL, COMMAND1_VAR, COMMAND2_VAR> {LBRACE}       { return WdlTypes.LBRACE; }
 <YYINITIAL, COMMAND1_VAR, COMMAND2_VAR> {RBRACE}       { return WdlTypes.RBRACE; }
 <YYINITIAL, COMMAND1_VAR, COMMAND2_VAR> {LPAREN}       { return WdlTypes.LPAREN; }

@@ -21,7 +21,12 @@ object WdlSyntaxHighlighter {
     WdlTypes.COMMAND_CHAR -> DefaultLanguageHighlighterColors.CONSTANT,
     WdlTypes.BOOLEAN -> DefaultLanguageHighlighterColors.CONSTANT,
     WdlTypes.NUMBER -> DefaultLanguageHighlighterColors.NUMBER,
-    WdlTypes.TYPE -> DefaultLanguageHighlighterColors.METADATA,
+
+    WdlTypes.PRIMITIVE -> DefaultLanguageHighlighterColors.METADATA,
+    WdlTypes.ARRAY -> DefaultLanguageHighlighterColors.METADATA,
+    WdlTypes.MAP_TYPE -> DefaultLanguageHighlighterColors.METADATA,
+    WdlTypes.PAIR -> DefaultLanguageHighlighterColors.METADATA,
+
     WdlTypes.LBRACE -> DefaultLanguageHighlighterColors.BRACES,
     WdlTypes.RBRACE -> DefaultLanguageHighlighterColors.BRACES,
     WdlTypes.LPAREN -> DefaultLanguageHighlighterColors.PARENTHESES,
@@ -65,8 +70,7 @@ object WdlSyntaxHighlighter {
     WdlTypes.RUNTIME -> DefaultLanguageHighlighterColors.KEYWORD,
     WdlTypes.PARAMETER_META -> DefaultLanguageHighlighterColors.KEYWORD,
     WdlTypes.META -> DefaultLanguageHighlighterColors.KEYWORD,
-    WdlTypes.OBJECT -> DefaultLanguageHighlighterColors.KEYWORD,
-    TokenType.BAD_CHARACTER -> HighlighterColors.BAD_CHARACTER
+    WdlTypes.OBJECT -> DefaultLanguageHighlighterColors.KEYWORD
   )
 
 }
