@@ -27,7 +27,7 @@ BOOLEAN="true"|"false"
 NUMBER="0"|"1"|"2"|"3"|"4"|"5"|"6"|"7"|"8"|"9"
 
 WHITE_SPACE= \n|\r|\r\n|\ |\t|\f
-TYPE="Array"|"Map"|"Object"|"Boolean"|"Int"|"Float"|"Uri"|"File"|"String"
+TYPE="Array"|"Map"|"Object"|"Boolean"|"Int"|"Float"|"Uri"|"File"|"String"|"Pair"
 LBRACE="{"
 RBRACE="}"
 TRIPLE_ANGLE_OPEN="<<<"
