@@ -56,16 +56,10 @@ setter ::= EQUAL expression
 map ::= LBRACE kv* RBRACE
 kv ::= IDENTIFIER COLON expression
 
-type_e ::= array_expression_with_postfix | non_array_expression
-non_array_expression ::= (PRIMITIVE  | map_expression | pair_expression) QMARK?
-array_expression_with_postfix ::= array_expression (QMARK | PLUS)?
-
-no_postfix_quantifier_type ::= array_expression | map_expression | PRIMITIVE | pair_expression
-
-array_expression ::= ARRAY LSQUARE no_postfix_quantifier_type RSQUARE 
-map_expression ::=  MAP_TYPE LSQUARE primitive COMMA no_postfix_quantifier_type RSQUARE
-pair_expression ::=  PAIR LSQUARE no_postfix_quantifier_type COMMA no_postfix_quantifier_type RSQUARE
-
+type_e ::= (PRIMITIVE_TYPE | map_expression | array_expression | pair_expression ) QMARK?
+array_expression ::= ARRAY_TYPE LSQUARE type_e RSQUARE PLUS?
+map_expression ::= MAP_TYPE LSQUARE type_e COMMA type_e RSQUARE
+pair_expression ::= PAIR_TYPE LSQUARE type_e COMMA type_e RSQUARE
 
 string_literal ::= QUOTE (QUOTE_STRING_CHAR|ESCAPE_SEQUENCE)* QUOTE
 

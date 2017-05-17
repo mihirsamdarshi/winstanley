@@ -22,10 +22,10 @@ object WdlSyntaxHighlighter {
     WdlTypes.BOOLEAN -> DefaultLanguageHighlighterColors.CONSTANT,
     WdlTypes.NUMBER -> DefaultLanguageHighlighterColors.NUMBER,
 
-    WdlTypes.PRIMITIVE -> DefaultLanguageHighlighterColors.METADATA,
-    WdlTypes.ARRAY -> DefaultLanguageHighlighterColors.METADATA,
+    WdlTypes.PRIMITIVE_TYPE -> DefaultLanguageHighlighterColors.METADATA,
+    WdlTypes.ARRAY_TYPE -> DefaultLanguageHighlighterColors.METADATA,
     WdlTypes.MAP_TYPE -> DefaultLanguageHighlighterColors.METADATA,
-    WdlTypes.PAIR -> DefaultLanguageHighlighterColors.METADATA,
+    WdlTypes.PAIR_TYPE -> DefaultLanguageHighlighterColors.METADATA,
 
     WdlTypes.LBRACE -> DefaultLanguageHighlighterColors.BRACES,
     WdlTypes.RBRACE -> DefaultLanguageHighlighterColors.BRACES,
