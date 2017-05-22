@@ -56,7 +56,7 @@ setter ::= EQUAL expression
 map ::= LBRACE kv* RBRACE
 kv ::= IDENTIFIER COLON expression
 
-type_e ::= (PRIMITIVE_TYPE | map_expression | array_expression | pair_expression ) QMARK?
+type_e ::= (OBJECT_TYPE | PRIMITIVE_TYPE | map_expression | array_expression | pair_expression ) QMARK?
 array_expression ::= ARRAY_TYPE LSQUARE type_e RSQUARE PLUS?
 map_expression ::= MAP_TYPE LSQUARE type_e COMMA type_e RSQUARE
 pair_expression ::= PAIR_TYPE LSQUARE type_e COMMA type_e RSQUARE

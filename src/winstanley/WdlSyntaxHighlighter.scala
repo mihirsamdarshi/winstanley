@@ -23,6 +23,7 @@ object WdlSyntaxHighlighter {
     WdlTypes.NUMBER -> DefaultLanguageHighlighterColors.NUMBER,
 
     WdlTypes.PRIMITIVE_TYPE -> DefaultLanguageHighlighterColors.METADATA,
+    WdlTypes.OBJECT_TYPE -> DefaultLanguageHighlighterColors.METADATA,
     WdlTypes.ARRAY_TYPE -> DefaultLanguageHighlighterColors.METADATA,
     WdlTypes.MAP_TYPE -> DefaultLanguageHighlighterColors.METADATA,
     WdlTypes.PAIR_TYPE -> DefaultLanguageHighlighterColors.METADATA,
