@@ -1,7 +1,7 @@
 <idea-plugin>
   <id>org.broadinstitute.winstanley</id>
   <name>Winstanley WDL</name>
-  <version>0.1.7-SNAPSHOT</version>
+  <version>0.1.8-SNAPSHOT</version>
   <vendor email="workflow-description-language@googlegroups.com">WDL at Broad Institute</vendor>
 
   <description><![CDATA[
@@ -11,6 +11,8 @@
     ]]></description>
 
   <change-notes><![CDATA[
+  0.1.8:
+    - Added brace matching support.
   0.1.7:
     - Added support for if/then/else expression.
     - Added support for "default=" and "true= false=" sections in command blocks.
@@ -28,6 +30,7 @@
     <fileTypeFactory implementation="winstanley.WdlFileTypeFactory"/>
     <lang.parserDefinition language="wdl" implementationClass="winstanley.WdlParserDefinition"/>
     <lang.syntaxHighlighterFactory language="wdl" implementationClass="winstanley.WdlSyntaxHighlighterFactory"/>
+    <lang.braceMatcher language="wdl" implementationClass="winstanley.WdlBraceMatcher"/>
     <colorSettingsPage implementation="winstanley.WdlColorSettingsPage"/>
   </extensions>
 
