@@ -71,6 +71,8 @@ INPUT="input"
 OUTPUT="output"
 WHILE="while"
 IF="if"
+THEN="then"
+ELSE="else"
 SCATTER="scatter"
 IN="in"
 TASK="task"
@@ -80,7 +82,10 @@ PARAMETER_META="parameter_meta"
 META="meta"
 OBJECT="object"
 IDENTIFIER=[:letter:]([:letter:]|[:digit:]|\_)*
-SEP="sep"
+ATTR_SEP="sep"
+ATTR_DEFAULT="default"
+ATTR_TRUE="true="|"true ="
+ATTR_FALSE="false="|"false ="
 
 %state WAITING_WORKFLOW_IDENTIFIER_DECL
 %state WAITING_TASK_IDENTIFIER_DECL
@@ -110,7 +115,10 @@ SEP="sep"
 <COMMAND2> {COMMAND_VAR_OPENER}                        { yybegin(COMMAND2_VAR); return WdlTypes.COMMAND_VAR_OPENER; }
 <COMMAND1_VAR> {RBRACE}                                { yybegin(COMMAND1); return WdlTypes.RBRACE; }
 <COMMAND2_VAR> {RBRACE}                                { yybegin(COMMAND2); return WdlTypes.RBRACE; }
-<COMMAND1_VAR, COMMAND2_VAR> {SEP}                     { return WdlTypes.SEP; }
+<COMMAND1_VAR, COMMAND2_VAR> {ATTR_DEFAULT}            { return WdlTypes.COMMAND_ATTR_DEFAULT; }
+<COMMAND1_VAR, COMMAND2_VAR> {ATTR_SEP}                { return WdlTypes.COMMAND_ATTR_SEP; }
+<COMMAND1_VAR, COMMAND2_VAR> {ATTR_TRUE}               { return WdlTypes.COMMAND_ATTR_TRUE; }
+<COMMAND1_VAR, COMMAND2_VAR> {ATTR_FALSE}              { return WdlTypes.COMMAND_ATTR_FALSE; }
 <COMMAND1, COMMAND2> .                                 { return WdlTypes.COMMAND_CHAR; }
 
 <YYINITIAL> {D_QUOTE_CHAR}                             { yybegin(D_QUOTE); return WdlTypes.QUOTE; }
@@ -158,6 +166,9 @@ SEP="sep"
 <YYINITIAL, COMMAND1_VAR, COMMAND2_VAR> {LESS_THAN}    { return WdlTypes.LESS_THAN; }
 <YYINITIAL, COMMAND1_VAR, COMMAND2_VAR> {MORE_EQUAL}   { return WdlTypes.MORE_EQUAL; }
 <YYINITIAL, COMMAND1_VAR, COMMAND2_VAR> {MORE_THAN}    { return WdlTypes.MORE_THAN; }
+<YYINITIAL, COMMAND1_VAR, COMMAND2_VAR> {IF}           { return WdlTypes.IF; }
+<YYINITIAL, COMMAND1_VAR, COMMAND2_VAR> {THEN}         { return WdlTypes.THEN; }
+<YYINITIAL, COMMAND1_VAR, COMMAND2_VAR> {ELSE}         { return WdlTypes.ELSE; }
 <YYINITIAL> {COMMENT}                                  { return WdlTypes.COMMENT; }
 <YYINITIAL> {IMPORT}                                   { return WdlTypes.IMPORT; }
 <YYINITIAL> {WORKFLOW}                                 { yybegin(WAITING_WORKFLOW_IDENTIFIER_DECL); return WdlTypes.WORKFLOW; }
@@ -167,7 +178,6 @@ SEP="sep"
 <YYINITIAL> {INPUT}                                    { return WdlTypes.INPUT; }
 <YYINITIAL> {OUTPUT}                                   { return WdlTypes.OUTPUT; }
 <YYINITIAL> {WHILE}                                    { return WdlTypes.WHILE; }
-<YYINITIAL> {IF}                                       { return WdlTypes.IF; }
 <YYINITIAL> {SCATTER}                                  { return WdlTypes.SCATTER; }
 <YYINITIAL> {IN}                                       { return WdlTypes.IN; }
 <YYINITIAL> {TASK}                                     { yybegin(WAITING_TASK_IDENTIFIER_DECL); return WdlTypes.TASK; }
