@@ -15,6 +15,7 @@
     - Added support for if/then/else expression.
     - Added support for "default=" and "true= false=" sections in command blocks.
     - Updated the .wdl icon to be less offensive in IntelliJ's "default" theme.
+    - Allows multiple consecutive member or array accesses (eg 'foo = bar[0].out[2]')
     ]]>
   </change-notes>
 
