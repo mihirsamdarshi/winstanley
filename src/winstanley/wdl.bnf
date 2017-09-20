@@ -41,8 +41,13 @@ task_block ::= TASK TASK_IDENTIFIER_DECL LBRACE declaration* sections* RBRACE
 sections ::= command_block|task_outputs|runtime_block|parameter_meta_block|meta_block
 
 command_block ::= COMMAND COMMAND_DELIMITER_OPEN (COMMAND_CHAR|command_var)* COMMAND_DELIMITER_CLOSE
-command_var ::= COMMAND_VAR_OPENER command_var_option? expression RBRACE
-command_var_option ::= SEP EQUAL expression // TODO: There's more of these!!?
+command_var ::= COMMAND_VAR_OPENER command_var_option* expression RBRACE
+primitive_value ::= string_literal | BOOLEAN | float_value | integer_value
+command_var_option_sep ::= COMMAND_ATTR_SEP EQUAL primitive_value
+command_var_option_default ::= COMMAND_ATTR_DEFAULT EQUAL primitive_value
+command_var_option_true_false ::= COMMAND_ATTR_TRUE primitive_value COMMAND_ATTR_FALSE primitive_value
+command_var_option_false_true ::= COMMAND_ATTR_FALSE primitive_value COMMAND_ATTR_TRUE primitive_value
+command_var_option ::= command_var_option_sep|command_var_option_default|command_var_option_false_true|command_var_option_true_false
 
 task_outputs ::= OUTPUT LBRACE output_kv* RBRACE
 output_kv ::= type_e IDENTIFIER EQUAL expression
@@ -64,7 +69,8 @@ pair_expression ::= PAIR_TYPE LSQUARE type_e COMMA type_e RSQUARE
 string_literal ::= QUOTE (QUOTE_STRING_CHAR|ESCAPE_SEQUENCE)* QUOTE
 
 expression ::= ( function_call | array_or_map_lookup | member_access | object_literal | map_literal | array_literal | value |
-                 LPAREN expression RPAREN | LOGICAL_NOT expression | PLUS expression | DASH expression
+                 LPAREN expression RPAREN | LOGICAL_NOT expression | PLUS expression | DASH expression |
+                 IF expression THEN expression ELSE expression
                ) expression_dash?
 expression_dash ::= infix_operator expression
 infix_operator ::= DOUBLE_PIPE | DOUBLE_AMPERSAND | DOUBLE_EQUAL | NOT_EQUAL | LESS_THAN | LESS_EQUAL | MORE_THAN |
