@@ -1,11 +1,12 @@
 package winstanley.structure
 
+import com.intellij.lang.ASTNode
 import com.intellij.openapi.util.TextRange
 import com.intellij.psi.PsiElement
 import com.intellij.psi.tree.IElementType
 import winstanley.psi._
 
-object WdlDocumentUtils {
+object WdlImplicits {
   implicit final class EnhancedPsiElement(val psiElement: PsiElement) extends AnyVal {
     def childTaskBlocks: Set[WdlTaskBlock] = (psiElement.getChildren collect {
       case t: WdlTaskBlock => t
@@ -33,6 +34,40 @@ object WdlDocumentUtils {
         lbrace <- Option(psiElement.getNode.findChildByType(ltype))
         rbrace <- Option(psiElement.getNode.findChildByType(rtype))
       } yield new TextRange(lbrace.getTextRange.getStartOffset + 1, rbrace.getTextRange.getEndOffset - 1)
+    }
+
+    def findContainingScatter: Option[WdlScatterBlock] = {
+      Option(psiElement.getParent) flatMap {
+        case s: WdlScatterBlock => Option(s)
+        case other => other.findContainingScatter
+      }
+    }
+
+    def findDeclarationsAvailableInScope: Set[WdlDeclaration] = {
+      Option(psiElement.getParent) map { parent =>
+        val siblings = parent.getChildren.filterNot(_ eq psiElement)
+        val siblingDeclarations = siblings collect {
+          case d: WdlDeclaration => d
+          case b: WdlWfBodyElement if b.getDeclaration != null => b.getDeclaration
+        }
+
+        parent.findDeclarationsAvailableInScope ++ siblingDeclarations
+      } getOrElse Set.empty
+    }
+
+    def getIdentifierNode: Option[ASTNode] = psiElement.getNode.getChildren(null).collectFirst {
+      case id if id.getElementType == WdlTypes.IDENTIFIER => id
+    }
+  }
+
+  implicit final class EnhancedWdlDeclaration(val wdlDeclaration: WdlDeclaration) extends AnyVal {
+    // The Option-ality is a little paranoid, but if the declaration is being edited it might be temporarily nameless:
+    def declaredValueName: Option[String] = wdlDeclaration.getIdentifierNode.map(_.getText)
+  }
+
+  implicit final class EnhancedWdlValue(val wdlValue: WdlValue) extends AnyVal {
+    def asIdentifierNode: Option[ASTNode] = {
+      if (wdlValue.getChildren.isEmpty) wdlValue.getIdentifierNode else None
     }
   }
 

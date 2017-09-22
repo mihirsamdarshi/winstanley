@@ -13,8 +13,9 @@
   <change-notes><![CDATA[
   0.1.8:
     - Added brace matching support.
-    - Added auto-commenting/uncommenting
+    - Added auto-commenting/uncommenting.
     - Added foldable sections in the WDL editor.
+    - Added undeclared variable detection.
   0.1.7:
     - Added support for if/then/else expression.
     - Added support for "default=" and "true= false=" sections in command blocks.
@@ -36,6 +37,7 @@
     <lang.commenter language="wdl" implementationClass="winstanley.WdlCommenter"/>
     <lang.foldingBuilder language="wdl" implementationClass="winstanley.WdlFoldingBuilder"/>
     <colorSettingsPage implementation="winstanley.WdlColorSettingsPage"/>
+    <annotator language="wdl" implementationClass="winstanley.WdlAnnotator"/>
   </extensions>
 
   <actions>
