@@ -4,7 +4,7 @@ import com.intellij.lang.ASTNode
 import com.intellij.lang.folding.{FoldingBuilderEx, FoldingDescriptor}
 import com.intellij.openapi.editor.Document
 import com.intellij.psi.PsiElement
-import winstanley.structure.WdlDocumentUtils._
+import winstanley.structure.WdlImplicits._
 
 class WdlFoldingBuilder extends FoldingBuilderEx {
 
