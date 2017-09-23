@@ -16,6 +16,7 @@
     - Added auto-commenting/uncommenting.
     - Added foldable sections in the WDL editor.
     - Added undeclared variable detection.
+    - Added support for pair literals.
   0.1.7:
     - Added support for if/then/else expression.
     - Added support for "default=" and "true= false=" sections in command blocks.

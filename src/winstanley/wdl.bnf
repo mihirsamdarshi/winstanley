@@ -69,7 +69,7 @@ pair_expression ::= PAIR_TYPE LSQUARE type_e COMMA type_e RSQUARE
 string_literal ::= QUOTE (QUOTE_STRING_CHAR|ESCAPE_SEQUENCE)* QUOTE
 
 expression ::= ( function_call | array_or_member_access | object_literal | map_literal | array_literal | value |
-                 LPAREN expression RPAREN | LOGICAL_NOT expression | PLUS expression | DASH expression |
+                 LPAREN expression (COMMA expression)? RPAREN | LOGICAL_NOT expression | PLUS expression | DASH expression |
                  IF expression THEN expression ELSE expression
                ) expression_dash?
 expression_dash ::= infix_operator expression
