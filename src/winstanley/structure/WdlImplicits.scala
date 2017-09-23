@@ -43,15 +43,28 @@ object WdlImplicits {
       }
     }
 
+    def findDeclarationsInInnerScopes: Set[WdlDeclaration] = {
+      def expandChild(child: PsiElement): Set[WdlDeclaration] = child match {
+        case d: WdlDeclaration => Set(d)
+        case b: WdlWfBodyElement if b.getDeclaration != null => Set(b.getDeclaration)
+        case other =>
+          other.findDeclarationsInInnerScopes
+      }
+
+      psiElement.getChildren.toSet flatMap expandChild
+    }
+
     def findDeclarationsAvailableInScope: Set[WdlDeclaration] = {
       Option(psiElement.getParent) map { parent =>
         val siblings = parent.getChildren.filterNot(_ eq psiElement)
         val siblingDeclarations = siblings collect {
-          case d: WdlDeclaration => d
-          case b: WdlWfBodyElement if b.getDeclaration != null => b.getDeclaration
+          case d: WdlDeclaration => Set(d)
+          case b: WdlWfBodyElement if b.getDeclaration != null => Set(b.getDeclaration)
+          case b: WdlWfBodyElement if b.getScatterBlock != null => b.getScatterBlock.findDeclarationsInInnerScopes
+          case b: WdlWfBodyElement if b.getIfStmt != null => b.getIfStmt.findDeclarationsInInnerScopes
         }
 
-        parent.findDeclarationsAvailableInScope ++ siblingDeclarations
+        parent.findDeclarationsAvailableInScope ++ siblingDeclarations.flatten
       } getOrElse Set.empty
     }
 
