@@ -2,8 +2,13 @@
 
 This plug-in currently supports:
 * Syntax highlighting
+* Collapsible code blocks for workflows, tasks, and more.
+* Highlighting and completion of parentheses `()` and other braces.
+* Allows auto-commenting of lines in WDL with <kbd>CMD</KBD>+<kbd>/</KBD>
+* Undeclared value detection
+* "Go to declaration" (currently for declared values only)
 
-Winstanley is open sourced under the BSD 3-Clause license.
+More features will be coming soon!
 
 ## Getting Started
 
@@ -24,8 +29,8 @@ To build or test the plugin using IntelliJ:
 4. Make sure the repo has a valid Scala SDK attached as a project dependency.
   * Otherwise you'll see errors like `"Cannot find class WdlElementType"` even though it's clearly there!
 5. Generate the necessary files (on Mac):
-  * Navigate to Wdl.flex and generate sources using \[Command + Shift + G\] 
-  * Navigate to wdl.bnf and generate sources using \[Command + Shift + G\]
+  * Navigate to Wdl.flex and generate sources using <kbd>CMD</KBD>+<kbd>SHIFT</KBD>+<kbd>G</KBD>. 
+  * Navigate to wdl.bnf and generate sources using <kbd>CMD</KBD>+<kbd>SHIFT</KBD>+<kbd>G</KBD>
 6. At this point, you can run or test the project using IntelliJ's preset run modes. 
   * Open the `Run Configurations` window (for me, in the top right of the IntelliJ window) 
   * Add a new one configuration with the `+` icon.
