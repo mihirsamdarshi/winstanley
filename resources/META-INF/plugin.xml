@@ -1,7 +1,7 @@
 <idea-plugin>
   <id>org.broadinstitute.winstanley</id>
   <name>Winstanley WDL</name>
-  <version>0.1.8-SNAPSHOT</version>
+  <version>0.1.8</version>
   <vendor email="workflow-description-language@googlegroups.com">WDL at Broad Institute</vendor>
 
   <description><![CDATA[
@@ -15,8 +15,9 @@
     - Added brace matching support.
     - Added auto-commenting/uncommenting.
     - Added foldable sections in the WDL editor.
-    - Added undeclared variable detection.
     - Added support for pair literals.
+    - Added undeclared value detection.
+    - Added "Go to declaration" (for declared variables only).
   0.1.7:
     - Added support for if/then/else expression.
     - Added support for "default=" and "true= false=" sections in command blocks.
