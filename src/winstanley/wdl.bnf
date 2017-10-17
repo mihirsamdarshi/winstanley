@@ -11,6 +11,8 @@
   elementTypeHolderClass="winstanley.psi.WdlTypes"
   elementTypeClass="winstanley.psi.WdlElementType"
   tokenTypeClass="winstanley.psi.WdlTokenType"
+
+  psiImplUtilClass="winstanley.psi.impl.WdlPsiImplUtil"
 }
 
 // Regenerate from IntelliJ using Grammar-Kit plugin and COMMAND-SHIFT-G
@@ -35,7 +37,8 @@ wf_output_wildcard ::= DOT ASTERISK
 
 while_loop ::= WHILE LPAREN expression RPAREN LBRACE wf_body_element* RBRACE
 if_stmt ::= IF LPAREN expression RPAREN LBRACE wf_body_element* RBRACE
-scatter_block ::= SCATTER LPAREN IDENTIFIER IN expression RPAREN LBRACE wf_body_element* RBRACE
+scatter_declaration ::= SCATTER LPAREN IDENTIFIER IN expression RPAREN {mixin="winstanley.psi.impl.WdlNamedElementImpl" implements="winstanley.psi.WdlNamedElement" methods=[getName getNameIdentifier setName]}
+scatter_block ::= scatter_declaration LBRACE wf_body_element* RBRACE
 
 task_block ::= TASK TASK_IDENTIFIER_DECL LBRACE declaration* sections* RBRACE
 sections ::= command_block|task_outputs|runtime_block|parameter_meta_block|meta_block
@@ -55,7 +58,7 @@ runtime_block ::= RUNTIME map
 parameter_meta_block ::= PARAMETER_META map
 meta_block ::= META map
 
-declaration ::= type_e IDENTIFIER setter?
+declaration ::= type_e IDENTIFIER setter? {mixin="winstanley.psi.impl.WdlNamedElementImpl" implements="winstanley.psi.WdlNamedElement" methods=[getName getNameIdentifier setName]}
 setter ::= EQUAL expression
 
 map ::= LBRACE kv* RBRACE
@@ -84,7 +87,8 @@ array_literal ::= LSQUARE expression (COMMA expression)* RSQUARE
 
 map_kv ::= expression COLON expression
 object_kv ::= IDENTIFIER COLON expression
-value ::= string_literal | IDENTIFIER | BOOLEAN | float_value | integer_value
+value ::= string_literal | variable_lookup | BOOLEAN | float_value | integer_value
+variable_lookup ::= IDENTIFIER {methods=[getReferences]}
 float_value ::= NUMBER+ DOT NUMBER+
 integer_value ::= NUMBER+
 
