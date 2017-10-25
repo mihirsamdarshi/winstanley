@@ -47,9 +47,9 @@ class WdlBraceMatcher extends PairedBraceMatcher {
   override def getPairs: Array[BracePair] = Array(
     new BracePair(WdlTypes.COMMAND_VAR_OPENER, WdlTypes.RBRACE, false),
     new BracePair(WdlTypes.LPAREN, WdlTypes.RPAREN, false),
-    new BracePair(WdlTypes.LBRACE, WdlTypes.RBRACE, true),
+    new BracePair(WdlTypes.LBRACE, WdlTypes.RBRACE, false),
     new BracePair(WdlTypes.LSQUARE, WdlTypes.RSQUARE, false),
-    new BracePair(WdlTypes.COMMAND_DELIMITER_OPEN, WdlTypes.COMMAND_DELIMITER_CLOSE, true)
+    new BracePair(WdlTypes.COMMAND_DELIMITER_OPEN, WdlTypes.COMMAND_DELIMITER_CLOSE, false)
   )
 
   /**
