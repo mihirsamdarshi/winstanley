@@ -12,7 +12,8 @@
 
   <change-notes><![CDATA[
   0.1.9:
-
+    - Fixed a bug that caused duplicate closing braces to appear.
+    - Fixed a bug that failed reference-lookup for outputs referencing other outputs
   0.1.8:
     - Added brace matching support.
     - Added auto-commenting/uncommenting.

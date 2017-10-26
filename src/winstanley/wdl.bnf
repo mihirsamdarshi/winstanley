@@ -31,7 +31,7 @@ mapping ::= IDENTIFIER EQUAL expression
 alias ::= AS IDENTIFIER
 wf_outputs ::= OUTPUT LBRACE wf_output* RBRACE
 wf_output ::= wf_output_declaration | wf_output_wildcard_statement
-wf_output_declaration ::= type_e IDENTIFIER EQUAL expression
+wf_output_declaration ::= type_e IDENTIFIER EQUAL expression {mixin="winstanley.psi.impl.WdlNamedElementImpl" implements="winstanley.psi.WdlNamedElement" methods=[getName getNameIdentifier setName]}
 wf_output_wildcard_statement ::= fqn wf_output_wildcard?
 wf_output_wildcard ::= DOT ASTERISK
 
@@ -53,7 +53,7 @@ command_var_option_false_true ::= COMMAND_ATTR_FALSE primitive_value COMMAND_ATT
 command_var_option ::= command_var_option_sep|command_var_option_default|command_var_option_false_true|command_var_option_true_false
 
 task_outputs ::= OUTPUT LBRACE output_kv* RBRACE
-output_kv ::= type_e IDENTIFIER EQUAL expression
+output_kv ::= type_e IDENTIFIER EQUAL expression {mixin="winstanley.psi.impl.WdlNamedElementImpl" implements="winstanley.psi.WdlNamedElement" methods=[getName getNameIdentifier setName]}
 runtime_block ::= RUNTIME map
 parameter_meta_block ::= PARAMETER_META map
 meta_block ::= META map
