@@ -53,12 +53,14 @@ object WdlImplicits {
     def findDeclarationsAvailableInScope: Set[WdlNamedElement] = {
       Option(psiElement.getParent) map { parent =>
         val siblings = parent.getChildren.filterNot(_ eq psiElement)
-        val siblingDeclarations = siblings collect {
-          case d: WdlDeclaration => Set(d)
+
+        val siblingDeclarations = (siblings collect {
+          case ne: WdlNamedElement => Set(ne)
+          case wo: WdlWfOutput => Set(wo.getWfOutputDeclaration)
           case b: WdlWfBodyElement if b.getDeclaration != null => Set(b.getDeclaration)
           case b: WdlWfBodyElement if b.getScatterBlock != null => b.getScatterBlock.findDeclarationsInInnerScopes
           case b: WdlWfBodyElement if b.getIfStmt != null => b.getIfStmt.findDeclarationsInInnerScopes
-        }
+        }).map(_.toSet[WdlNamedElement])
 
         val scatterDeclaration = Option(parent) collect {
           case b: WdlWfBodyElement if b.getScatterBlock != null => b.getScatterBlock.getScatterDeclaration
