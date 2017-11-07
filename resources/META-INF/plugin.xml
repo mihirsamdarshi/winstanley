@@ -12,6 +12,7 @@
 
   <change-notes><![CDATA[
   0.1.10:
+    - Added support for optional-optional type parsing (eg Int??)
     - Stopped error messages occurring for empty text ranges.
   0.1.9:
     - Fixed a bug that caused duplicate closing braces to appear.
