@@ -21,7 +21,7 @@ object WdlImplicits {
         } yield new TextRange(lbrace.getTextRange.getStartOffset + 1, rbrace.getTextRange.getEndOffset - 1)
       }
 
-      psiElement match {
+      val potentialRange = psiElement match {
         case _: WdlTaskBlock | _: WdlWorkflowBlock | _: WdlTaskOutputs | _: WdlWfOutputs | _: WdlCallBlock | _: WdlScatterBlock | _: WdlIfStmt =>
           interBraceContentRange(psiElement, WdlTypes.LBRACE, WdlTypes.RBRACE)
         case wcb: WdlCommandBlock =>
@@ -30,6 +30,8 @@ object WdlImplicits {
           mapContainingContentRange(psiElement)
         case _ => None
       }
+
+      potentialRange collect { case range if range.getLength > 0 => range }
     }
 
     def findContainingScatter: Option[WdlScatterBlock] = {
