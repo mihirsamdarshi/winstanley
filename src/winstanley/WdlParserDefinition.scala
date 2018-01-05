@@ -30,7 +30,7 @@ class WdlParserDefinition extends ParserDefinition {
   override def createLexer(project: Project): Lexer = new WdlLexerAdapter()
 
   @NotNull
-  def getWhitespaceTokens: TokenSet = WdlParserDefinition.WHITE_SPACES
+  override def getWhitespaceTokens: TokenSet = WdlParserDefinition.WHITE_SPACES
 
   @NotNull
   def getCommentTokens: TokenSet = WdlParserDefinition.COMMENTS
