@@ -14,14 +14,4 @@ groups:
     author_approval:
       ignored: true
     users:
-        - Horneth
-        - cjllanwarne
-        - geoffjentry
-        - jsotobroad
-        - katevoss
-        - kcibul
-        - kshakir
-        - mcovarr
-        - ruchim
-        - danbills
-        - jbuabbud
+        - redteam
