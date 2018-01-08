@@ -8,10 +8,10 @@ group_defaults:
     enabled: false
 groups:
   reviewers:
-    required: 2
+    required: 1
     github_reviews:
       enabled: true
     author_approval:
       ignored: true
-    users:
+    team:
         - redteam
