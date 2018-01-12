@@ -83,7 +83,7 @@ array_or_member_access ::= IDENTIFIER array_or_member_access_suffix+
 array_or_member_access_suffix ::= LSQUARE expression RSQUARE | DOT IDENTIFIER
 object_literal ::= OBJECT LBRACE object_kv (COMMA object_kv)* RBRACE
 map_literal ::= LBRACE map_kv (COMMA map_kv)* RBRACE
-array_literal ::= LSQUARE expression (COMMA expression)* RSQUARE
+array_literal ::= LSQUARE (expression (COMMA expression)*)? RSQUARE
 
 map_kv ::= expression COLON expression
 object_kv ::= IDENTIFIER COLON expression
