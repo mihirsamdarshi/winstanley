@@ -30,7 +30,10 @@ To build or test the plugin using IntelliJ:
   * Otherwise you'll see errors like `"Cannot find class WdlElementType"` even though it's clearly there!
 5. Generate the necessary files (on Mac):
   * Navigate to Wdl.flex and generate sources using <kbd>CMD</KBD>+<kbd>SHIFT</KBD>+<kbd>G</KBD>. 
+    - You may be prompted to choose a destination for the generated sources. If `/$PROJECT_ROOT/gen` doesn't exist, create
+    it. Choose `/$PROJECT_ROOT/gen` as the destination.
   * Navigate to wdl.bnf and generate sources using <kbd>CMD</KBD>+<kbd>SHIFT</KBD>+<kbd>G</KBD>
+  * It may be necessary to right click on the `gen` folder and select `Mark Directory As>Generated Sources Root`
 6. At this point, you can run or test the project using IntelliJ's preset run modes. 
   * Open the `Run Configurations` window (for me, in the top right of the IntelliJ window) 
   * Add a new one configuration with the `+` icon.
