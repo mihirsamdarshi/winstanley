@@ -122,7 +122,7 @@ ATTR_FALSE="false="|"false ="
 <COMMAND1, COMMAND2> .                                 { return WdlTypes.COMMAND_CHAR; }
 
 <YYINITIAL> {D_QUOTE_CHAR}                             { yybegin(D_QUOTE); return WdlTypes.QUOTE; }
-<YYINITIAL> {S_QUOTE_CHAR}                             { yybegin(D_QUOTE); return WdlTypes.QUOTE; }
+<YYINITIAL> {S_QUOTE_CHAR}                             { yybegin(S_QUOTE); return WdlTypes.QUOTE; }
 <COMMAND1_VAR> {D_QUOTE_CHAR}                          { yybegin(COMMAND1_VAR_D_QUOTE); return WdlTypes.QUOTE; }
 <COMMAND1_VAR> {S_QUOTE_CHAR}                          { yybegin(COMMAND1_VAR_S_QUOTE); return WdlTypes.QUOTE; }
 <COMMAND2_VAR> {D_QUOTE_CHAR}                          { yybegin(COMMAND2_VAR_D_QUOTE); return WdlTypes.QUOTE; }
