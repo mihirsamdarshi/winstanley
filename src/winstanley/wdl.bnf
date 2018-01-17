@@ -71,15 +71,14 @@ pair_expression ::= PAIR_TYPE LSQUARE type_e COMMA type_e RSQUARE
 
 string_literal ::= QUOTE (QUOTE_STRING_CHAR|ESCAPE_SEQUENCE)* QUOTE
 
-expression ::= ( function_call | array_or_member_access | object_literal | map_literal | array_literal | value |
+expression ::= ( function_call | object_literal | map_literal | array_literal | value |
                  LPAREN expression (COMMA expression)? RPAREN | LOGICAL_NOT expression | PLUS expression | DASH expression |
                  IF expression THEN expression ELSE expression
-               ) expression_dash?
+               ) array_or_member_access_suffix* expression_dash?
 expression_dash ::= infix_operator expression
 infix_operator ::= DOUBLE_PIPE | DOUBLE_AMPERSAND | DOUBLE_EQUAL | NOT_EQUAL | LESS_THAN | LESS_EQUAL | MORE_THAN |
                     MORE_EQUAL | PLUS | DASH | ASTERISK | SLASH | PERCENT
 function_call ::= IDENTIFIER LPAREN (expression (COMMA expression)*)? RPAREN
-array_or_member_access ::= IDENTIFIER array_or_member_access_suffix+
 array_or_member_access_suffix ::= LSQUARE expression RSQUARE | DOT IDENTIFIER
 object_literal ::= OBJECT LBRACE object_kv (COMMA object_kv)* COMMA? RBRACE
 map_literal ::= LBRACE map_kv (COMMA map_kv)* COMMA? RBRACE
