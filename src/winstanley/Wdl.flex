@@ -53,6 +53,8 @@ DASH="-"
 ASTERISK=\*
 SLASH=\/
 PERCENT=\%
+DOLLAR_ESCAPE=\\\$
+CLOSE_CURLY_ESCAPE=\\\}
 COMMAND_VAR_OPENER=\$\{
 LOGICAL_NOT="!"
 COMMA=","
@@ -113,6 +115,10 @@ ATTR_FALSE="false="|"false ="
 <COMMAND2> {TRIPLE_ANGLE_CLOSE}                        { yybegin(YYINITIAL); return WdlTypes.COMMAND_DELIMITER_CLOSE; }
 <COMMAND1> {COMMAND_VAR_OPENER}                        { yybegin(COMMAND1_VAR); return WdlTypes.COMMAND_VAR_OPENER; }
 <COMMAND2> {COMMAND_VAR_OPENER}                        { yybegin(COMMAND2_VAR); return WdlTypes.COMMAND_VAR_OPENER; }
+<COMMAND1> {DOLLAR_ESCAPE}                             { return WdlTypes.COMMAND_ESCAPED_CHAR; }
+<COMMAND2> {DOLLAR_ESCAPE}                             { return WdlTypes.COMMAND_ESCAPED_CHAR; }
+<COMMAND1> {CLOSE_CURLY_ESCAPE}                        { return WdlTypes.COMMAND_ESCAPED_CHAR; }
+<COMMAND2> {CLOSE_CURLY_ESCAPE}                        { return WdlTypes.COMMAND_ESCAPED_CHAR; }
 <COMMAND1_VAR> {RBRACE}                                { yybegin(COMMAND1); return WdlTypes.RBRACE; }
 <COMMAND2_VAR> {RBRACE}                                { yybegin(COMMAND2); return WdlTypes.RBRACE; }
 <COMMAND1_VAR, COMMAND2_VAR> {ATTR_DEFAULT}            { return WdlTypes.COMMAND_ATTR_DEFAULT; }
