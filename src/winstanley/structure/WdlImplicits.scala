@@ -2,9 +2,10 @@ package winstanley.structure
 
 import com.intellij.lang.ASTNode
 import com.intellij.openapi.util.TextRange
-import com.intellij.psi.PsiElement
-import com.intellij.psi.tree.IElementType
+import com.intellij.psi.{PsiElement, PsiFile}
+import com.intellij.psi.tree.{IElementType, TokenSet}
 import winstanley.psi._
+import winstanley.psi.impl.WdlTaskBlockImpl
 
 object WdlImplicits {
   implicit final class EnhancedPsiElement(val psiElement: PsiElement) extends AnyVal {
@@ -73,6 +74,28 @@ object WdlImplicits {
     }
 
     def getIdentifierNode: Option[ASTNode] = Option(psiElement.getNode.findChildByType(WdlTypes.IDENTIFIER))
+
+    def getTaskIdentifierNode: Option[ASTNode] = Option(psiElement.getNode.findChildByType(WdlTypes.TASK_IDENTIFIER_DECL))
+
+    /**
+      * Recurses until it has reached the PsiFile node and finds all task blocks, then returns the task declaration for
+      * each found task block.
+      */
+    def findTaskDeclarationsAvailableInScope: Set[WdlNamedTaskElement] = psiElement match {
+      case p: PsiFile => {
+        val taskBlocks = p.getChildren.collect {
+          case taskBlock: WdlTaskBlockImpl => taskBlock
+        }
+        taskBlocks.map(_.getTaskDeclaration).toSet
+      }
+      case other => other.getParent.findTaskDeclarationsAvailableInScope
+    }
+  }
+
+  implicit final class EnhancedWdlCallableLookup(val wdlCallableLookup: WdlCallableLookup) extends AnyVal {
+    def getCalledIdentifier: String = {
+      wdlCallableLookup.getFullyQualifiedName.getNode.getChildren(TokenSet.create(WdlTypes.IDENTIFIER)).toList.map(_.getText).mkString(".")
+    }
   }
 
 }

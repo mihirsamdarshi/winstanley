@@ -24,7 +24,9 @@ import_namespace ::= AS IDENTIFIER
 
 workflow_block ::= WORKFLOW WORKFLOW_IDENTIFIER_DECL LBRACE wf_body_element* RBRACE
 wf_body_element ::= call_block | declaration | while_loop | if_stmt | scatter_block | wf_outputs
-call_block ::= CALL fqn alias? (LBRACE call_body RBRACE)?
+
+callable_lookup ::= fully_qualified_name {methods=[getReferences]}
+call_block ::= CALL callable_lookup alias? (LBRACE call_body RBRACE)?
 call_body ::= declaration* call_input*
 call_input ::= INPUT COLON (mapping (COMMA mapping)*)?
 mapping ::= IDENTIFIER EQUAL expression
@@ -32,7 +34,7 @@ alias ::= AS IDENTIFIER
 wf_outputs ::= OUTPUT LBRACE wf_output* RBRACE
 wf_output ::= wf_output_declaration | wf_output_wildcard_statement
 wf_output_declaration ::= type_e IDENTIFIER EQUAL expression {mixin="winstanley.psi.impl.WdlNamedElementImpl" implements="winstanley.psi.WdlNamedElement" methods=[getName getNameIdentifier setName]}
-wf_output_wildcard_statement ::= fqn wf_output_wildcard?
+wf_output_wildcard_statement ::= fully_qualified_name wf_output_wildcard?
 wf_output_wildcard ::= DOT ASTERISK
 
 while_loop ::= WHILE LPAREN expression RPAREN LBRACE wf_body_element* RBRACE
@@ -40,7 +42,8 @@ if_stmt ::= IF LPAREN expression RPAREN LBRACE wf_body_element* RBRACE
 scatter_declaration ::= SCATTER LPAREN IDENTIFIER IN expression RPAREN {mixin="winstanley.psi.impl.WdlNamedElementImpl" implements="winstanley.psi.WdlNamedElement" methods=[getName getNameIdentifier setName]}
 scatter_block ::= scatter_declaration LBRACE wf_body_element* RBRACE
 
-task_block ::= TASK TASK_IDENTIFIER_DECL LBRACE declaration* sections* RBRACE
+task_declaration ::= TASK_IDENTIFIER_DECL {mixin="winstanley.psi.impl.WdlNamedTaskElementImpl" implements="winstanley.psi.WdlNamedTaskElement" methods=[getName getNameIdentifier setName]}
+task_block ::= TASK task_declaration LBRACE declaration* sections* RBRACE
 sections ::= command_block|task_outputs|runtime_block|parameter_meta_block|meta_block
 
 command_block ::= COMMAND COMMAND_DELIMITER_OPEN (COMMAND_CHAR|command_var)* COMMAND_DELIMITER_CLOSE
@@ -91,4 +94,4 @@ variable_lookup ::= IDENTIFIER {methods=[getReferences]}
 float_value ::= NUMBER+ DOT NUMBER+
 integer_value ::= NUMBER+
 
-fqn ::= IDENTIFIER (DOT IDENTIFIER)*
+fully_qualified_name ::= IDENTIFIER (DOT IDENTIFIER)*
