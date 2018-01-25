@@ -58,7 +58,7 @@ object WdlImplicits {
 
         val siblingDeclarations = (siblings collect {
           case ne: WdlNamedElement => Set(ne)
-          case wo: WdlWfOutput => Set(wo.getWfOutputDeclaration)
+          case wo: WdlWfOutput if wo.getWfOutputDeclaration != null => Set(wo.getWfOutputDeclaration)
           case b: WdlWfBodyElement if b.getDeclaration != null => Set(b.getDeclaration)
           case b: WdlWfBodyElement if b.getScatterBlock != null => b.getScatterBlock.findDeclarationsInInnerScopes
           case b: WdlWfBodyElement if b.getIfStmt != null => b.getIfStmt.findDeclarationsInInnerScopes
