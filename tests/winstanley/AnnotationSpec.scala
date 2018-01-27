@@ -31,6 +31,7 @@ class AnnotationSpec extends LightCodeInsightFixtureTestCase {
   }
 
   override def setUp(): Unit = super.setUp()
+  override def tearDown(): Unit = super.tearDown()
   override def getTestDataPath: String = "tests/testData/annotation/"
 }
 
