@@ -20,6 +20,8 @@ class AnnotationSpec extends LightCodeInsightFixtureTestCase {
 
   def testOutputMissingDeclaration(): Unit = annotationTest("output_missing_declaration.wdl")
 
+  def testMissingTaskDeclaration(): Unit = annotationTest("missing_task_declaration.wdl")
+
   private def annotationTest(path: String): Unit = {
     myFixture.configureByFile(path)
 

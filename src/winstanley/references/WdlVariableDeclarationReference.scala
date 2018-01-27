@@ -7,7 +7,11 @@ import com.intellij.psi.{PsiElement, PsiReferenceBase}
 import winstanley.psi.WdlVariableLookup
 import winstanley.structure.WdlImplicits._
 
-final case class WdlDeclarationReference(value: WdlVariableLookup) extends PsiReferenceBase[PsiElement](value, value.getTextRange){
+/**
+  * Holds a PSI element that references a variable. Defines methods to find and return the named
+  * element for the variable being referenced.
+  */
+final case class WdlVariableDeclarationReference(value: WdlVariableLookup) extends PsiReferenceBase[PsiElement](value, value.getTextRange) {
 
   /**
     * Returns the element which is the target of the reference !!! OR NULL IF NOT FOUND !!!
@@ -37,5 +41,5 @@ final case class WdlDeclarationReference(value: WdlVariableLookup) extends PsiRe
     * It needs a relative range within the PsiElement 'value' to count as the reference,
     * which in this case is the entire 'WdlVariableLookup' element.
     */
-  override def getRangeInElement: TextRange = new TextRange(0, value.getTextLength - 1)
+  override def getRangeInElement: TextRange = new TextRange(0, value.getTextLength)
 }
