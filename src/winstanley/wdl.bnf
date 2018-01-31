@@ -25,12 +25,12 @@ import_namespace ::= AS IDENTIFIER
 workflow_block ::= WORKFLOW WORKFLOW_IDENTIFIER_DECL LBRACE wf_body_element* RBRACE
 wf_body_element ::= call_block | declaration | while_loop | if_stmt | scatter_block | wf_outputs
 
-callable_lookup ::= fully_qualified_name {methods=[getReferences]}
+callable_lookup ::= fully_qualified_name {mixin="winstanley.psi.impl.WdlNamedElementImpl" implements="winstanley.psi.WdlNamedElement" methods=[getName getNameIdentifier setName getReferences]}
 call_block ::= CALL callable_lookup alias? (LBRACE call_body RBRACE)?
 call_body ::= declaration* call_input*
 call_input ::= INPUT COLON (mapping (COMMA mapping)*)?
 mapping ::= IDENTIFIER EQUAL expression
-alias ::= AS IDENTIFIER
+alias ::= AS IDENTIFIER {mixin="winstanley.psi.impl.WdlNamedElementImpl" implements="winstanley.psi.WdlNamedElement" methods=[getName getNameIdentifier setName]}
 wf_outputs ::= OUTPUT LBRACE wf_output* RBRACE
 wf_output ::= wf_output_declaration | wf_output_wildcard_statement
 wf_output_declaration ::= type_e IDENTIFIER EQUAL expression {mixin="winstanley.psi.impl.WdlNamedElementImpl" implements="winstanley.psi.WdlNamedElement" methods=[getName getNameIdentifier setName]}
@@ -89,8 +89,8 @@ array_literal ::= LSQUARE (expression (COMMA expression)* COMMA?)? RSQUARE
 
 map_kv ::= expression COLON expression
 object_kv ::= IDENTIFIER COLON expression
-value ::= string_literal | variable_lookup | BOOLEAN | float_value | integer_value
-variable_lookup ::= IDENTIFIER {methods=[getReferences]}
+value ::= string_literal | value_lookup | BOOLEAN | float_value | integer_value
+value_lookup ::= IDENTIFIER {methods=[getReferences]}
 float_value ::= NUMBER+ DOT NUMBER+
 integer_value ::= NUMBER+
 

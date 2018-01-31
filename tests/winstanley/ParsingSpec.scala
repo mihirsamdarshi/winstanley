@@ -14,6 +14,8 @@ class ParsingSpec extends ParsingTestCase("", "wdl", new WdlParserDefinition()) 
 
   def testHello(): Unit = doTest(true)
 
+  def testHello_Alias(): Unit = doTest(true)
+
   override def getTestDataPath: String = parsingTestPath
   override def skipSpaces(): Boolean = false
   override def includeRanges(): Boolean = true

@@ -2,7 +2,7 @@ package winstanley
 
 import com.intellij.lang.annotation.{AnnotationHolder, Annotator}
 import com.intellij.psi.PsiElement
-import winstanley.psi.{WdlCallableLookup, WdlVariableLookup}
+import winstanley.psi.{WdlCallableLookup, WdlValueLookup}
 import winstanley.structure.WdlImplicits._
 
 
@@ -12,13 +12,13 @@ class WdlAnnotator extends Annotator {
     * Makes sure that the passed PSI element is one of the cases, then determines if it's been declared somewhere
     */
   override def annotate(psiElement: PsiElement, annotationHolder: AnnotationHolder): Unit = psiElement match {
-    case value: WdlVariableLookup =>
+    case value: WdlValueLookup =>
 
       value.getIdentifierNode foreach { identifier =>
         val identifierText = identifier.getText
-        val declarationNames = value.findDeclarationsAvailableInScope.flatMap(_.declaredValueName)
+        val valueNames = value.findReferencesInScope.flatMap(_.declaredValueName)
 
-        if (!declarationNames.contains(identifierText)) {
+        if (!valueNames.contains(identifierText)) {
           annotationHolder.createErrorAnnotation(identifier.getTextRange, s"No declaration found for '${identifier.getText}'")
         }
       }
@@ -26,9 +26,9 @@ class WdlAnnotator extends Annotator {
 
       value.getFullyQualifiedName.getIdentifierNode foreach { identifier =>
         val identifierText = identifier.getText
-        val declarationNames = value.findTaskDeclarationsAvailableInScope.flatMap(_.declaredValueName)
+        val taskNames = value.findTasksInScope.flatMap(_.declaredValueName)
 
-        if (!declarationNames.contains(identifierText)) {
+        if (!taskNames.contains(identifierText)) {
           annotationHolder.createErrorAnnotation(identifier.getTextRange, s"No task declaration found for '${identifier.getText}'")
         }
       }

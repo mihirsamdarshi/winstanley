@@ -1,8 +1,8 @@
 package winstanley.psi.impl
 
 import com.intellij.psi.{PsiElement, PsiReference}
-import winstanley.psi.{WdlCallableLookup, WdlVariableLookup, WdlWorkflowBlock}
-import winstanley.references.{WdlCallableDeclarationReference, WdlVariableDeclarationReference}
+import winstanley.psi.{WdlCallableLookup, WdlValueLookup}
+import winstanley.references.{WdlCallableDeclarationReference, WdlReference}
 import winstanley.structure.WdlImplicits._
 
 
@@ -14,7 +14,7 @@ import winstanley.structure.WdlImplicits._
 object WdlPsiImplUtil extends
   WdlNamedElementImplUtil with
   WdlNamedTaskElementImplUtil with
-  WdlVariableLookupImplUtil with
+  WdlValueLookupImplUtil with
   WdlCallableLookupImplUtil
 
 /**
@@ -24,7 +24,10 @@ sealed trait WdlNamedElementImplUtil {
   def getName(namedElement: WdlNamedElementImpl): String = namedElement.declaredValueName.orNull
   // TODO: Implement for "refactor/rename" functionality
   def setName(namedElement: WdlNamedElementImpl, newName: String): PsiElement = ???
-  def getNameIdentifier(namedElement: WdlNamedElementImpl): PsiElement = namedElement.getIdentifierNode.map(_.getPsi).orNull
+  def getNameIdentifier(namedElement: WdlNamedElementImpl): PsiElement = namedElement match {
+    case callable: WdlCallableLookupImpl => callable.getFullyQualifiedName.getLastChild
+    case _ => namedElement.getIdentifierNode.map(_.getPsi).orNull
+  }
 }
 
 sealed trait WdlNamedTaskElementImplUtil {
@@ -34,11 +37,11 @@ sealed trait WdlNamedTaskElementImplUtil {
   def getNameIdentifier(namedTaskElement: WdlNamedTaskElementImpl): PsiElement = namedTaskElement.getTaskIdentifierNode.map(_.getPsi).orNull
 }
 
-sealed trait WdlVariableLookupImplUtil {
+sealed trait WdlValueLookupImplUtil {
   /**
     * This is the method that enables the 'go to declaration' functionality for variable usages.
     */
-  def getReferences(wdlVariableLookup: WdlVariableLookup): Array[PsiReference] = Array(WdlVariableDeclarationReference(wdlVariableLookup))
+  def getReferences(wdlValueLookup: WdlValueLookup): Array[PsiReference] = Array(WdlReference(wdlValueLookup))
 }
 
 sealed trait WdlCallableLookupImplUtil {
