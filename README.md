@@ -6,7 +6,7 @@ This plug-in currently supports:
 * Highlighting and completion of parentheses `()` and other braces.
 * Allows auto-commenting of lines in WDL with <kbd>CMD</KBD>+<kbd>/</KBD>
 * Undeclared value detection
-* "Go to declaration" (currently for declared values only)
+* "Go to declaration"
 
 More features will be coming soon!
 

@@ -42,18 +42,24 @@ object WdlImplicits {
       }
     }
 
-    def findDeclarationsInInnerScopes: Set[WdlDeclaration] = {
-      def expandChild(child: PsiElement): Set[WdlDeclaration] = child match {
+    def findReferencesInInnerScopes: Set[WdlNamedElement] = {
+      def expandChild(child: PsiElement): Set[WdlNamedElement] = child match {
         case d: WdlDeclaration => Set(d)
         case b: WdlWfBodyElement if b.getDeclaration != null => Set(b.getDeclaration)
-        case other =>
-          other.findDeclarationsInInnerScopes
+        case b: WdlWfBodyElement if b.getCallBlock != null => findAliasOrCallDeclaration(b.getCallBlock)
+        case other => other.findReferencesInInnerScopes
       }
-
       psiElement.getChildren.toSet flatMap expandChild
     }
 
-    def findDeclarationsAvailableInScope: Set[WdlNamedElement] = {
+    private def findAliasOrCallDeclaration(callBlock: WdlCallBlock): Set[WdlNamedElement] = {
+      Option(callBlock.getAlias) match {
+        case Some(alias) => Set(alias)
+        case None => Set(callBlock.getCallableLookup)
+      }
+    }
+
+    def findReferencesInScope: Set[WdlNamedElement] = {
       Option(psiElement.getParent) map { parent =>
         val siblings = parent.getChildren.filterNot(_ eq psiElement)
 
@@ -61,15 +67,16 @@ object WdlImplicits {
           case ne: WdlNamedElement => Set(ne)
           case wo: WdlWfOutput if wo.getWfOutputDeclaration != null => Set(wo.getWfOutputDeclaration)
           case b: WdlWfBodyElement if b.getDeclaration != null => Set(b.getDeclaration)
-          case b: WdlWfBodyElement if b.getScatterBlock != null => b.getScatterBlock.findDeclarationsInInnerScopes
-          case b: WdlWfBodyElement if b.getIfStmt != null => b.getIfStmt.findDeclarationsInInnerScopes
+          case b: WdlWfBodyElement if b.getScatterBlock != null => b.getScatterBlock.findReferencesInInnerScopes
+          case b: WdlWfBodyElement if b.getIfStmt != null => b.getIfStmt.findReferencesInInnerScopes
+          case b: WdlWfBodyElement if b.getCallBlock != null => findAliasOrCallDeclaration(b.getCallBlock)
         }).map(_.toSet[WdlNamedElement])
 
         val scatterDeclaration = Option(parent) collect {
           case b: WdlWfBodyElement if b.getScatterBlock != null => b.getScatterBlock.getScatterDeclaration
         }
 
-        parent.findDeclarationsAvailableInScope ++ siblingDeclarations.flatten ++ scatterDeclaration
+        parent.findReferencesInScope ++ siblingDeclarations.flatten ++ scatterDeclaration
       } getOrElse Set.empty
     }
 
@@ -81,14 +88,13 @@ object WdlImplicits {
       * Recurses until it has reached the PsiFile node and finds all task blocks, then returns the task declaration for
       * each found task block.
       */
-    def findTaskDeclarationsAvailableInScope: Set[WdlNamedTaskElement] = psiElement match {
-      case p: PsiFile => {
+    def findTasksInScope: Set[WdlNamedTaskElement] = psiElement match {
+      case p: PsiFile =>
         val taskBlocks = p.getChildren.collect {
           case taskBlock: WdlTaskBlockImpl => taskBlock
         }
         taskBlocks.map(_.getTaskDeclaration).toSet
-      }
-      case other => other.getParent.findTaskDeclarationsAvailableInScope
+      case other => other.getParent.findTasksInScope
     }
   }
 

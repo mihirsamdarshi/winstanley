@@ -2,6 +2,7 @@ package winstanley
 
 import java.io.{File, FilenameFilter}
 import winstanley.AnnotationSpec._
+import winstanley.ParsingSpec._
 import com.intellij.testFramework.fixtures.LightCodeInsightFixtureTestCase
 
 //
@@ -14,13 +15,17 @@ class AnnotationSpec extends LightCodeInsightFixtureTestCase {
     * Run over the parsing WDLs and make sure they don't contain any annotations
     */
   def testNoAnnotation(): Unit = {
-    val parsingTestWdls = new File(ParsingSpec.parsingTestPath).listFiles(WdlFilenameFilter)
+    val parsingTestWdls = new File(parsingTestPath).listFiles(WdlFilenameFilter)
     parsingTestWdls foreach { wdl => annotationTest(wdl.getAbsolutePath) }
   }
 
   def testOutputMissingDeclaration(): Unit = annotationTest("output_missing_declaration.wdl")
 
   def testMissingTaskDeclaration(): Unit = annotationTest("missing_task_declaration.wdl")
+
+  def testMissingAliasDeclaration(): Unit = annotationTest("missing_alias_declaration.wdl")
+
+  def testLookupNotPointingToAliasDeclaration(): Unit = annotationTest("value_lookup_not_pointing_to_alias_declaration.wdl")
 
   private def annotationTest(path: String): Unit = {
     myFixture.configureByFile(path)

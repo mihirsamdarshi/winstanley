@@ -4,14 +4,14 @@ import javax.annotation.Nullable
 
 import com.intellij.openapi.util.TextRange
 import com.intellij.psi.{PsiElement, PsiReferenceBase}
-import winstanley.psi.WdlVariableLookup
+import winstanley.psi.{WdlValueLookup, WdlNamedElement}
 import winstanley.structure.WdlImplicits._
 
 /**
-  * Holds a PSI element that references a variable. Defines methods to find and return the named
-  * element for the variable being referenced.
+  * Holds a PSI element that might be referenced by a WdlValueLookup. Defines methods to find and return the named
+  * element for the element being referenced.
   */
-final case class WdlVariableDeclarationReference(value: WdlVariableLookup) extends PsiReferenceBase[PsiElement](value, value.getTextRange) {
+final case class WdlReference(value: WdlValueLookup) extends PsiReferenceBase[PsiElement](value, value.getTextRange) {
 
   /**
     * Returns the element which is the target of the reference !!! OR NULL IF NOT FOUND !!!
@@ -21,7 +21,14 @@ final case class WdlVariableDeclarationReference(value: WdlVariableLookup) exten
     */
   @Nullable
   override def resolve(): PsiElement = {
-    value.findDeclarationsAvailableInScope.find(d => value.getIdentifierNode.exists(_.getText == d.getNameIdentifier.getText)).map(_.getNameIdentifier).orNull
+    value.findReferencesInScope.find(matchesValueName).map(_.getNameIdentifier).orNull
+  }
+
+  /**
+    * Returns true if the text in the identifier node of the lookup matches the element name identifier text.
+    */
+  private def matchesValueName(element: WdlNamedElement) = {
+    value.getIdentifierNode.exists(_.getText == element.getNameIdentifier.getText)
   }
 
   /**

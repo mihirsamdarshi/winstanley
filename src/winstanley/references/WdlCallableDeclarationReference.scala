@@ -22,7 +22,7 @@ final case class WdlCallableDeclarationReference(value: WdlCallableLookup) exten
     */
   @Nullable
   override def resolve(): PsiElement = {
-    value.findTaskDeclarationsAvailableInScope.find(d => value.getCalledIdentifier == d.getNameIdentifier.getText).map(_.getNameIdentifier).orNull
+    value.findTasksInScope.find(d => value.getCalledIdentifier == d.getNameIdentifier.getText).map(_.getNameIdentifier).orNull
   }
 
   /**
