@@ -11,6 +11,10 @@
     ]]></description>
 
   <change-notes><![CDATA[
+  0.2:
+    - Go to declarations added from calls to tasks
+    - Go to declarations added from call outputs to calls
+    - More bug fixes
   0.1.10:
     - Added support for optional-optional type parsing (eg Int??)
     - Stopped error messages occurring for empty text ranges.
