@@ -2,7 +2,7 @@ package winstanley
 
 import com.intellij.lang.annotation.{AnnotationHolder, Annotator}
 import com.intellij.psi.PsiElement
-import winstanley.psi.{WdlCallableLookup, WdlValueLookup}
+import winstanley.psi._
 import winstanley.structure.WdlImplicits._
 
 
@@ -36,6 +36,10 @@ class WdlAnnotator extends Annotator {
         }
       } else
         ()
+    case declaration: WdlDeclaration =>
+      if (psiElement.getWdlFileElement.isInstanceOf[WdlDraft3File])
+        if (!declaration.getParent.isInstanceOf[WdlInputBlock] && declaration.getSetter == null)
+          annotationHolder.createErrorAnnotation(psiElement, "Immediate assignment required for non-input declaration [draft-3]")
     case _ => ()
   }
 }
