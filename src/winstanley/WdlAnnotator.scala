@@ -1,10 +1,13 @@
 package winstanley
 
+import com.intellij.lang.ASTNode
 import com.intellij.lang.annotation.{AnnotationHolder, Annotator}
 import com.intellij.psi.PsiElement
 import com.intellij.psi.impl.source.tree.LeafPsiElement
 import winstanley.psi._
 import winstanley.structure.WdlImplicits._
+
+import collection.JavaConverters._
 
 class WdlAnnotator extends Annotator {
 
@@ -14,7 +17,22 @@ class WdlAnnotator extends Annotator {
   override def annotate(psiElement: PsiElement, annotationHolder: AnnotationHolder): Unit = psiElement match {
     case dep: LeafPsiElement if dep.getElementType == WdlTypes.DEPRECATED_COMMAND_VAR_OPENER =>
       val commandVar = dep.getParent.getParent
-      annotationHolder.createWarningAnnotation(commandVar.getTextRange, "Deprecated placeholder style: Use ~{ ... } from WDL draft 3 onwards to match 'command <<<' section placeholders")
+      annotationHolder.createWeakWarningAnnotation(commandVar.getTextRange, "Deprecated placeholder style: Use ~{ ... } from WDL draft 3 onwards to match 'command <<<' section placeholders")
+
+    case task: WdlTaskBlock =>
+      if (!task.getTaskSectionList.asScala.exists(section => Option(section.getCommandBlock).isDefined)) {
+        annotationHolder.createErrorAnnotation(task.getTaskDeclaration.getNameIdentifier.getTextRange, "No command specified for task")
+      }
+      if (!task.getTaskSectionList.asScala.exists(section => Option(section.getRuntimeBlock).isDefined)) {
+        annotationHolder.createWeakWarningAnnotation(task.getTaskDeclaration.getNameIdentifier.getTextRange, "Non-portable task section: add a runtime section specifying a docker image")
+      }
+      if (!task.getTaskSectionList.asScala.exists(section => Option(section.getTaskOutputs).isDefined)) {
+        annotationHolder.createWeakWarningAnnotation(task.getTaskDeclaration.getNameIdentifier.getTextRange, "Suspicious lack of task outputs (is this task really idempotent and portable?)")
+      }
+    case runtime: WdlRuntimeBlock if !runtime.getMap.getKvList.asScala.flatMap(kvName).contains("docker") =>
+      runtimeKeyword(runtime) foreach { r => annotationHolder.createWeakWarningAnnotation(r.getTextRange, "Non-portable runtime section: specify a docker image") }
+    case taskOutputSection: WdlTaskOutputs if taskOutputSection.getOutputKvList.asScala.isEmpty =>
+      outputKeyword(taskOutputSection) foreach { r => annotationHolder.createWeakWarningAnnotation(r.getTextRange, "Suspicious lack of task outputs (is this task really idempotent and portable?)") }
 
     case value: WdlValueLookup =>
       value.getIdentifierNode foreach { identifier =>
@@ -45,4 +63,8 @@ class WdlAnnotator extends Annotator {
           annotationHolder.createErrorAnnotation(psiElement, "Immediate assignment required for non-input declaration [draft-3]")
     case _ => ()
   }
+
+  private def kvName(kv: WdlKv): Option[String] = Option(kv.getNode.findChildByType(WdlTypes.IDENTIFIER)).map(_.getText)
+  private def runtimeKeyword(r: WdlRuntimeBlock): Option[ASTNode] = Option(r.getNode.findChildByType(WdlTypes.RUNTIME))
+  private def outputKeyword(r: WdlTaskOutputs): Option[ASTNode] = Option(r.getNode.findChildByType(WdlTypes.OUTPUT))
 }
