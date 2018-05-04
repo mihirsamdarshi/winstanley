@@ -1,7 +1,7 @@
 <idea-plugin>
   <id>org.broadinstitute.winstanley</id>
   <name>Winstanley WDL</name>
-  <version>0.3.1</version>
+  <version>0.3.2</version>
   <vendor email="workflow-description-language@googlegroups.com">WDL at Broad Institute</vendor>
 
   <description><![CDATA[
@@ -11,6 +11,11 @@
     ]]></description>
 
   <change-notes><![CDATA[
+  0.3.2:
+    - Allows "version 1.0" as a version alias of "version draft-3"
+    - Adds more nudges towards best practices
+    - Warnings on draft-2 / 1.0 differences
+    - Fixes an incorrect error highlight
   0.3.1:
     - Bug fixes in draft 3 support
   0.3:
