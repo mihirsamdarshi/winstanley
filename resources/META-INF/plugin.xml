@@ -65,6 +65,9 @@
 
   <actions>
     <!-- Add your actions here -->
+    <action id="Winstanley.WomtoolValidate" class="winstanley.Womstanley" text="Validate with Womtool">
+      <add-to-group group-id="ToolbarRunGroup" anchor="first"/>
+    </action>
   </actions>
 
 </idea-plugin>
