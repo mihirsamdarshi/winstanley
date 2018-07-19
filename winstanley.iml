@@ -12,5 +12,16 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="scala-sdk-2.12.6" level="project" />
+    <orderEntry type="module-library">
+      <library name="womtool-34">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/womtool-34.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES>
+          <root url="jar://$MODULE_DIR$/womtool-34.jar!/" />
+        </SOURCES>
+      </library>
+    </orderEntry>
   </component>
 </module>
