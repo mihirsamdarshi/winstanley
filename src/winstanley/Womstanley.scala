@@ -3,8 +3,6 @@ package winstanley
 import com.intellij.execution.filters.TextConsoleBuilderFactory
 import com.intellij.execution.ui.ConsoleView
 import com.intellij.execution.ui.ConsoleViewContentType.{ERROR_OUTPUT, NORMAL_OUTPUT}
-import com.intellij.notification.NotificationType.INFORMATION
-import com.intellij.notification.{Notification, Notifications}
 import com.intellij.openapi.actionSystem.CommonDataKeys.VIRTUAL_FILE
 import com.intellij.openapi.actionSystem.{AnAction, AnActionEvent}
 import com.intellij.openapi.progress.{PerformInBackgroundOption, ProgressIndicator, ProgressManager, Task}
@@ -13,8 +11,7 @@ import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.openapi.wm.{ToolWindow, ToolWindowManager}
 import com.intellij.ui.content.Content
 import cromwell.core.path.{DefaultPathBuilder, Path}
-import womtool.WomtoolMain.{SuccessfulTermination, Termination, UnsuccessfulTermination}
-import womtool.inputs.Inputs
+import womtool.WomtoolMain.{BadUsageTermination, SuccessfulTermination, Termination, UnsuccessfulTermination}
 import womtool.validate.Validate
 
 import scala.util.{Failure, Success, Try}
@@ -27,7 +24,7 @@ object Womstanley {
       val currentFile: VirtualFile = e.getData(VIRTUAL_FILE)
 
       // If focus is on something other than a file (like the console) we'll get null
-      if (currentFile != null) {
+      if (currentFile != null && currentFile.getExtension == "wdl") {
         val path: Path = DefaultPathBuilder.build(currentFile.getPath).toOption.get
 
         val toolWindow = createToolWindow(e.getProject)
@@ -48,7 +45,7 @@ object Womstanley {
                 success match {
                   case success: SuccessfulTermination =>
                     console.print(s"Success." + success.stdout.get, NORMAL_OUTPUT)
-                  case failure: UnsuccessfulTermination =>
+                  case failure =>
                     console.print(failure.stderr.get, ERROR_OUTPUT)
                 }
               case Failure(failure) =>
@@ -77,7 +74,7 @@ object Womstanley {
   private def createConsole(title: String, project: Project, toolWindow: ToolWindow): ConsoleView = {
     val console = TextConsoleBuilderFactory.getInstance().createBuilder(project).getConsole
     // A "content" in IntelliJ is a tool window tab
-    val content = toolWindow.getContentManager.getFactory.createContent(console.getComponent, title, true)
+    val content: Content = toolWindow.getContentManager.getFactory.createContent(console.getComponent, title, true)
     toolWindow.getContentManager.addContent(content)
 
     toolWindow.getContentManager.setSelectedContent(content, true, true)
