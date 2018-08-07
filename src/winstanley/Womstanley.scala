@@ -11,7 +11,7 @@ import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.openapi.wm.{ToolWindow, ToolWindowManager}
 import com.intellij.ui.content.Content
 import cromwell.core.path.{DefaultPathBuilder, Path}
-import womtool.WomtoolMain.{BadUsageTermination, SuccessfulTermination, Termination, UnsuccessfulTermination}
+import womtool.WomtoolMain.{SuccessfulTermination, Termination}
 import womtool.validate.Validate
 
 import scala.util.{Failure, Success, Try}
@@ -19,6 +19,17 @@ import scala.util.{Failure, Success, Try}
 object Womstanley {
 
   class Validate extends AnAction {
+
+    override def update(e: AnActionEvent): Unit = {
+      val currentFile: VirtualFile = e.getData(VIRTUAL_FILE)
+      val presentation = e.getPresentation
+
+      if (currentFile == null || currentFile.getExtension != "wdl") {
+        presentation.setEnabled(false)
+      } else {
+        presentation.setEnabled(true)
+      }
+    }
 
     override def actionPerformed(e: AnActionEvent): Unit = {
       val currentFile: VirtualFile = e.getData(VIRTUAL_FILE)
@@ -82,8 +93,4 @@ object Womstanley {
     console
   }
 
-  // Other WOMtool commands...
-//  class Inputs extends AnAction {
-//
-//  }
 }
