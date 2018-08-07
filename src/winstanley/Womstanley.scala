@@ -1,20 +1,19 @@
 package winstanley
 
-import com.intellij.execution.Executor
-import com.intellij.execution.configurations.RunProfileState
 import com.intellij.execution.filters.TextConsoleBuilderFactory
+import com.intellij.execution.ui.ConsoleViewContentType.{ERROR_OUTPUT, NORMAL_OUTPUT}
+import com.intellij.notification.NotificationType.INFORMATION
 import com.intellij.notification.{Notification, Notifications}
-import com.intellij.openapi.actionSystem.{AnAction, AnActionEvent}
 import com.intellij.openapi.actionSystem.CommonDataKeys.VIRTUAL_FILE
+import com.intellij.openapi.actionSystem.{AnAction, AnActionEvent}
+import com.intellij.openapi.progress.{PerformInBackgroundOption, ProgressIndicator, ProgressManager, Task}
 import com.intellij.openapi.vfs.VirtualFile
+import com.intellij.openapi.wm.ToolWindowManager
 import cromwell.core.path.{DefaultPathBuilder, Path}
-import womtool.validate.Validate
 import womtool.WomtoolMain.{SuccessfulTermination, Termination, UnsuccessfulTermination}
-import com.intellij.notification.NotificationType.{ERROR, INFORMATION}
-import com.intellij.execution.ui.ConsoleViewContentType.ERROR_OUTPUT
-import com.intellij.openapi.wm.ToolWindowId
-import javax.swing.Icon
+import womtool.validate.Validate
 
+import scala.util.{Failure, Success, Try}
 
 object Womstanley {
 
@@ -27,35 +26,48 @@ object Womstanley {
         val path: Path = DefaultPathBuilder.build(currentFile.getPath).toOption.get
 
         // Maybe: find same-named inputs JSON and pass it in as second param?
-        val result: Termination = Validate.validate(path, None)
+
+
+        val toolWindow = ToolWindowManager.getInstance(e.getProject).getToolWindow("Womtool")
+        toolWindow.getContentManager.removeAllContents(true)
+
+        assert(toolWindow != null, "Attempted to write console output to non-existent tool window")
+
+        val console = TextConsoleBuilderFactory.getInstance().createBuilder(e.getProject).getConsole
+        // A "content" in IntelliJ is a tool window tab
+        val content = toolWindow.getContentManager.getFactory.createContent(console.getComponent, "WDL Validation", true)
+        toolWindow.getContentManager.addContent(content)
+
+        toolWindow.getContentManager.setSelectedContent(content, true, true)
+
+        toolWindow.activate(null)
+
+        console.print(s"Validating ${currentFile.getPresentableName}...${System.lineSeparator()}", NORMAL_OUTPUT)
+
+//        ProgressManager.getInstance().run(new Task.Backgroundable(e.getProject, "Womtool Validate", false, PerformInBackgroundOption.ALWAYS_BACKGROUND) {
+//          override def run(progressIndicator: ProgressIndicator): Unit = {
+//            progressIndicator.setIndeterminate(true)
+//          }
+//        })
+
+        val result: Try[Termination] = Try {
+          Validate.validate(path, None)
+        }
 
         result match {
-          case success: SuccessfulTermination =>
-            // HTML works here!
-            val notification = new Notification("WomTool", "WDL Validation Succeeded", "<i>" + currentFile.getName + "</i>", INFORMATION)
-            Notifications.Bus.notify(notification, e.getProject) // I'm not exactly sure what specifying the (optional) project gets us, but it's free so why not
-//            println(success.stdout)
-          case failure: UnsuccessfulTermination =>
-
-            import com.intellij.openapi.wm.ToolWindow
-            import com.intellij.openapi.wm.ToolWindowManager
-
-            val toolWindow = ToolWindowManager.getInstance(e.getProject).getToolWindow("Event Log")
-
-            assert(toolWindow != null, "Attempted to write console output to non-existent tool window")
-
-            val console = TextConsoleBuilderFactory.getInstance().createBuilder(e.getProject).getConsole
-            val content = toolWindow.getContentManager.getFactory.createContent(console.getComponent, "WDL Messages", true)
-
-            toolWindow.getContentManager.addContent(content)
-            toolWindow.getContentManager.setSelectedContent(content, true, true)
-
-            toolWindow.activate(null)
-
-            console.print(failure.stderr.get, ERROR_OUTPUT)
-
-          case _ => ??? // TODO: proper error handling
+          case Success(success) =>
+            success match {
+              case success: SuccessfulTermination =>
+                console.print(s"Success." + success.stdout.get, NORMAL_OUTPUT)
+              case failure: UnsuccessfulTermination =>
+                console.print(failure.stderr.get, ERROR_OUTPUT)
+            }
+          case Failure(failure) =>
+            console.print(s"Failed with reason:${System.lineSeparator()}", ERROR_OUTPUT)
+            console.print(failure.getMessage, ERROR_OUTPUT)
         }
+
+
       }
     }
   }
@@ -65,4 +77,3 @@ object Womstanley {
 //
 //  }
 }
-

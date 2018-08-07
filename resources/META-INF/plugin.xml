@@ -61,6 +61,7 @@
     <lang.foldingBuilder language="wdl" implementationClass="winstanley.WdlFoldingBuilder"/>
     <colorSettingsPage implementation="winstanley.WdlColorSettingsPage"/>
     <annotator language="wdl" implementationClass="winstanley.WdlAnnotator"/>
+    <toolWindow id="Womtool" anchor="bottom" factoryClass="winstanley.WomtoolToolWindow" canCloseContents="true"/>
   </extensions>
 
   <actions>
