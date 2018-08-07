@@ -65,7 +65,7 @@
   </extensions>
 
   <actions>
-    <action id="Winstanley.WomtoolValidate" class="winstanley.Womstanley$Validate" text="Validate with Womtool">
+    <action id="Winstanley.WomtoolValidate" class="winstanley.Womstanley$Validate" text="Validate with Womtool" icon="/icons/wdl-validate-logo.png">
       <add-to-group group-id="ToolbarRunGroup" anchor="first"/>
     </action>
   </actions>

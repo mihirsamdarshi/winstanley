@@ -24,9 +24,9 @@ object Womstanley {
   class Validate extends AnAction {
 
     override def actionPerformed(e: AnActionEvent): Unit = {
+      val currentFile: VirtualFile = e.getData(VIRTUAL_FILE)
 
       // If focus is on something other than a file (like the console) we'll get null
-      val currentFile: VirtualFile = e.getData(VIRTUAL_FILE)
       if (currentFile != null) {
         val path: Path = DefaultPathBuilder.build(currentFile.getPath).toOption.get
 
@@ -60,6 +60,7 @@ object Womstanley {
         })
       }
     }
+
   }
 
   private def createToolWindow(project: Project): ToolWindow = {
