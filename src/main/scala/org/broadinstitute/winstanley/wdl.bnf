@@ -1,0 +1,110 @@
+{
+  parserClass="org.broadinstitute.winstanley.parser.WdlParser"
+
+  extends="com.intellij.extapi.psi.ASTWrapperPsiElement"
+
+  psiClassPrefix="Wdl"
+  psiImplClassSuffix="Impl"
+  psiPackage="org.broadinstitute.winstanley.psi"
+  psiImplPackage="org.broadinstitute.winstanley.psi.impl"
+
+  elementTypeHolderClass="org.broadinstitute.winstanley.psi.WdlTypes"
+  elementTypeClass="org.broadinstitute.winstanley.psi.WdlElementType"
+  tokenTypeClass="org.broadinstitute.winstanley.psi.WdlTokenType"
+
+  psiImplUtilClass="org.broadinstitute.winstanley.psi.impl.WdlPsiImplUtil"
+}
+
+// Regenerate from IntelliJ using Grammar-Kit plugin and COMMAND-SHIFT-G
+
+wdlFile ::= version1_0File | draft2File
+draft2File ::= import_stmt* (task_block|workflow_block|COMMENT)*
+version1_0File ::= VERSION VERSION_IDENTIFIER import_stmt* (task_block|workflow_block|struct_block|COMMENT)*
+
+import_stmt ::= IMPORT string_literal import_namespace? import_alias*
+import_namespace ::= AS IDENTIFIER
+import_alias ::= ALIAS IDENTIFIER AS IDENTIFIER
+
+struct_block ::= STRUCT STRUCT_IDENTIFIER_DECL LBRACE struct_entry* RBRACE
+struct_entry ::= type_e IDENTIFIER {mixin="org.broadinstitute.winstanley.psi.impl.WdlNamedElementImpl" implements="org.broadinstitute.winstanley.psi.WdlNamedElement" methods=[getName getNameIdentifier setName]}
+
+workflow_block ::= WORKFLOW WORKFLOW_IDENTIFIER_DECL LBRACE wf_body_element* RBRACE
+wf_body_element ::= call_block | input_block | declaration | while_loop | if_stmt | scatter_block | wf_outputs | parameter_meta_block | meta_block
+
+input_block ::= INPUT LBRACE declaration* RBRACE
+
+callable_lookup ::= fully_qualified_name {mixin="org.broadinstitute.winstanley.psi.impl.WdlNamedElementImpl" implements="org.broadinstitute.winstanley.psi.WdlNamedElement" methods=[getName getNameIdentifier setName getReferences]}
+call_block ::= CALL callable_lookup call_alias? (LBRACE call_input RBRACE)?
+call_input ::= (INPUT COLON (mapping COMMA)* mapping?)?
+mapping ::= IDENTIFIER EQUAL expression
+call_alias ::= AS IDENTIFIER {mixin="org.broadinstitute.winstanley.psi.impl.WdlNamedElementImpl" implements="org.broadinstitute.winstanley.psi.WdlNamedElement" methods=[getName getNameIdentifier setName]}
+wf_outputs ::= OUTPUT LBRACE wf_output* RBRACE
+wf_output ::= wf_output_declaration | wf_output_wildcard_statement
+wf_output_declaration ::= type_e IDENTIFIER EQUAL expression {mixin="org.broadinstitute.winstanley.psi.impl.WdlNamedElementImpl" implements="org.broadinstitute.winstanley.psi.WdlNamedElement" methods=[getName getNameIdentifier setName]}
+wf_output_wildcard_statement ::= fully_qualified_name wf_output_wildcard?
+wf_output_wildcard ::= DOT ASTERISK
+
+while_loop ::= WHILE LPAREN expression RPAREN LBRACE wf_body_element* RBRACE
+if_stmt ::= IF LPAREN expression RPAREN LBRACE wf_body_element* RBRACE
+scatter_declaration ::= SCATTER LPAREN IDENTIFIER IN expression RPAREN {mixin="org.broadinstitute.winstanley.psi.impl.WdlNamedElementImpl" implements="org.broadinstitute.winstanley.psi.WdlNamedElement" methods=[getName getNameIdentifier setName]}
+scatter_block ::= scatter_declaration LBRACE wf_body_element* RBRACE
+
+task_declaration ::= TASK_IDENTIFIER_DECL {mixin="org.broadinstitute.winstanley.psi.impl.WdlNamedTaskElementImpl" implements="org.broadinstitute.winstanley.psi.WdlNamedTaskElement" methods=[getName getNameIdentifier setName]}
+task_block ::= TASK task_declaration LBRACE task_section* RBRACE
+task_section ::= declaration|input_block|command_block|task_outputs|runtime_block|parameter_meta_block|meta_block
+
+command_block ::= COMMAND COMMAND_DELIMITER_OPEN (COMMAND_CHAR|command_var)* COMMAND_DELIMITER_CLOSE
+command_var ::= placeholder_opener command_var_option* expression RBRACE
+placeholder_opener ::= COMMAND_VAR_OPENER | DEPRECATED_COMMAND_VAR_OPENER
+primitive_value ::= string_literal | BOOLEAN | float_value | integer_value
+command_var_option_sep ::= COMMAND_ATTR_SEP EQUAL primitive_value
+command_var_option_default ::= COMMAND_ATTR_DEFAULT EQUAL primitive_value
+command_var_option_true_false ::= COMMAND_ATTR_TRUE primitive_value COMMAND_ATTR_FALSE primitive_value
+command_var_option_false_true ::= COMMAND_ATTR_FALSE primitive_value COMMAND_ATTR_TRUE primitive_value
+command_var_option ::= command_var_option_sep|command_var_option_default|command_var_option_false_true|command_var_option_true_false
+
+task_outputs ::= OUTPUT LBRACE output_kv* RBRACE
+output_kv ::= type_e IDENTIFIER EQUAL expression {mixin="org.broadinstitute.winstanley.psi.impl.WdlNamedElementImpl" implements="org.broadinstitute.winstanley.psi.WdlNamedElement" methods=[getName getNameIdentifier setName]}
+runtime_block ::= RUNTIME LBRACE kv* RBRACE
+
+parameter_meta_block ::= PARAMETER_META LBRACE meta_kv* RBRACE
+meta_block ::= META LBRACE meta_kv* RBRACE
+meta_value ::= string_literal | integer_value | float_value | BOOLEAN | NULL | meta_object | meta_array
+meta_kv ::= IDENTIFIER COLON meta_value
+meta_object ::= LBRACE (meta_kv (COMMA meta_kv)*)? RBRACE
+meta_array ::= LSQUARE (meta_value (COMMA meta_value)*)? RSQUARE
+
+declaration ::= type_e IDENTIFIER setter? {mixin="org.broadinstitute.winstanley.psi.impl.WdlNamedElementImpl" implements="org.broadinstitute.winstanley.psi.WdlNamedElement" methods=[getName getNameIdentifier setName]}
+setter ::= EQUAL expression
+
+map ::= LBRACE kv* RBRACE
+kv ::= IDENTIFIER COLON expression
+
+type_e ::= (OBJECT_TYPE | PRIMITIVE_TYPE | map_expression | array_expression | pair_expression | IDENTIFIER ) QMARK*
+array_expression ::= ARRAY_TYPE LSQUARE type_e RSQUARE PLUS?
+map_expression ::= MAP_TYPE LSQUARE type_e COMMA type_e RSQUARE
+pair_expression ::= PAIR_TYPE LSQUARE type_e COMMA type_e RSQUARE
+
+string_literal ::= QUOTE (QUOTE_STRING_CHAR|ESCAPE_SEQUENCE)* QUOTE
+
+expression ::= ( function_call | object_literal | map_literal | array_literal | value |
+                 LPAREN expression (COMMA expression)? RPAREN | LOGICAL_NOT expression | PLUS expression | DASH expression |
+                 IF expression THEN expression ELSE expression
+               ) array_or_member_access_suffix* expression_dash?
+expression_dash ::= infix_operator expression
+infix_operator ::= DOUBLE_PIPE | DOUBLE_AMPERSAND | DOUBLE_EQUAL | NOT_EQUAL | LESS_THAN | LESS_EQUAL | MORE_THAN |
+                    MORE_EQUAL | PLUS | DASH | ASTERISK | SLASH | PERCENT
+function_call ::= IDENTIFIER LPAREN (expression (COMMA expression)*)? RPAREN
+array_or_member_access_suffix ::= LSQUARE expression RSQUARE | DOT IDENTIFIER
+object_literal ::= OBJECT LBRACE object_kv (COMMA object_kv)* COMMA? RBRACE
+map_literal ::= LBRACE map_kv (COMMA map_kv)* COMMA? RBRACE
+array_literal ::= LSQUARE (expression (COMMA expression)* COMMA?)? RSQUARE
+
+map_kv ::= expression COLON expression
+object_kv ::= IDENTIFIER COLON expression
+value ::= string_literal | value_lookup | BOOLEAN | float_value | integer_value
+value_lookup ::= IDENTIFIER {methods=[getReferences]}
+float_value ::= NUMBER+ DOT NUMBER+
+integer_value ::= NUMBER+
+
+fully_qualified_name ::= IDENTIFIER (DOT IDENTIFIER)*

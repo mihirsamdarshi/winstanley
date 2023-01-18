@@ -1,0 +1,121 @@
+<idea-plugin>
+  <id>org.broadinstitute.winstanley</id>
+  <name>Winstanley WDL</name>
+  <version>0.5.0</version>
+  <vendor email="workflow-description-language@googlegroups.com">WDL at Broad Institute</vendor>
+
+  <description><![CDATA[
+      Winstanley provides WDL language support to the IntelliJ IDEA IDE.
+      For the WDL language specification, see https://github.com/openwdl/wdl.
+      For a workflow engine runner which supports WDL, see https://github.com/broadinstitute/cromwell.
+    ]]></description>
+
+  <change-notes><![CDATA[
+  <ul>
+    <li>
+      0.4.1
+      <ul>
+        <li>Allows and highlights WDL with a 'version development' declaration, but treats it like 1.0 for now</li>
+      </ul>
+    </li>
+    <li>
+      0.4
+      <ul>
+        <li>Highlight missing, misspelled, and extraneous inputs at call sites (WDL 1.0 only)</li>
+      </ul>
+    </li>
+    <li>
+      0.3.3
+      <ul>
+        <li>Fixed an issue that caused variables named "version" to be incorrectly flagged as errors</li>
+      </ul>
+    </li>
+    <li>
+      0.3.2
+      <ul>
+        <li>Allows "version 1.0" as a version alias of "version draft-3"</li>
+        <li>Adds more nudges towards best practices</li>
+        <li>Warnings on draft-2 / 1.0 differences</li>
+        <li>Fixes an incorrect error highlight</li>
+      </ul>
+    </li>
+    <li>
+      0.3.1
+      <ul>
+        <li>Bug fixes in draft 3 support</li>
+      </ul>
+    </li>
+    <li>
+      0.3
+      <ul>
+        <li>Initial WDL Draft 3 support</li>
+      </ul>
+    </li>
+    <li>
+      0.2
+      <ul>
+        <li>Go to declarations added from calls to tasks</li>
+        <li>Go to declarations added from call outputs to calls</li>
+        <li>More bug fixes</li>
+      </ul>
+    </li>
+    <li>
+      0.1.10
+      <ul>
+        <li>Added support for optional-optional type parsing (eg Int??)</li>
+        <li>Stopped error messages occurring for empty text ranges.</li>
+      </ul>
+    </li>
+    <li>
+      0.1.9
+      <ul>
+        <li>Fixed a bug that caused duplicate closing braces to appear.</li>
+        <li>Fixed a bug that failed reference-lookup for outputs referencing other outputs</li>
+      </ul>
+    </li>
+    <li>
+      0.1.8
+      <ul>
+        <li>Added brace matching support.</li>
+        <li>Added auto-commenting/uncommenting.</li>
+        <li>Added foldable sections in the WDL editor.</li>
+        <li>Added support for pair literals.</li>
+        <li>Added undeclared value detection.</li>
+        <li>Added "Go to declaration" (for declared variables only).</li>
+      </ul>
+    </li>
+    <li>
+      0.1.7
+      <ul>
+        <li>Added support for if/then/else expression.</li>
+        <li>Added support for "default=" and "true= false=" sections in command blocks.</li>
+        <li>Updated the .wdl icon to be less offensive in IntelliJ's "default" theme.</li>
+        <li>Allows multiple consecutive member or array accesses (eg 'foo = bar[0].out[2]')</li>
+      </ul>
+    </li>
+  </ul>
+    ]]>
+  </change-notes>
+
+  <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/build_number_ranges.html for description -->
+  <idea-version since-build="141.0"/>
+
+  <depends>com.intellij.modules.lang</depends>
+
+  <extensions defaultExtensionNs="com.intellij">
+    <fileTypeFactory implementation="winstanley.WdlFileTypeFactory"/>
+    <lang.parserDefinition language="wdl" implementationClass="winstanley.WdlParserDefinition"/>
+    <lang.syntaxHighlighterFactory language="wdl" implementationClass="winstanley.WdlSyntaxHighlighterFactory"/>
+    <lang.braceMatcher language="wdl" implementationClass="winstanley.WdlBraceMatcher"/>
+    <lang.commenter language="wdl" implementationClass="winstanley.WdlCommenter"/>
+    <lang.foldingBuilder language="wdl" implementationClass="winstanley.WdlFoldingBuilder"/>
+    <lang.formatter language="wdl" implementationClass="winstanley.formatting.WdlFormattingModelBuilder"/>
+    <colorSettingsPage implementation="winstanley.WdlColorSettingsPage"/>
+    <annotator language="wdl" implementationClass="winstanley.WdlAnnotator"/>
+  </extensions>
+
+  <actions>
+    <!-- Add your actions here -->
+  </actions>
+
+</idea-plugin>
