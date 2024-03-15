@@ -1,16 +1,16 @@
 <idea-plugin>
-  <id>org.broadinstitute.winstanley</id>
-  <name>Winstanley WDL</name>
-  <version>0.5.0</version>
-  <vendor email="workflow-description-language@googlegroups.com">WDL at Broad Institute</vendor>
+    <id>org.broadinstitute.winstanley</id>
+    <name>Winstanley WDL</name>
+    <version>0.5.0</version>
+    <vendor email="workflow-description-language@googlegroups.com">WDL at Broad Institute</vendor>
 
-  <description><![CDATA[
+    <description><![CDATA[
       Winstanley provides WDL language support to the IntelliJ IDEA IDE.
       For the WDL language specification, see https://github.com/openwdl/wdl.
       For a workflow engine runner which supports WDL, see https://github.com/broadinstitute/cromwell.
     ]]></description>
 
-  <change-notes><![CDATA[
+    <change-notes><![CDATA[
   <ul>
     <li>
       0.4.1
@@ -95,27 +95,28 @@
     </li>
   </ul>
     ]]>
-  </change-notes>
+    </change-notes>
 
-  <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/build_number_ranges.html for description -->
-  <idea-version since-build="141.0"/>
+    <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/build_number_ranges.html for description -->
+    <idea-version since-build="203.5981.155"/>
 
-  <depends>com.intellij.modules.lang</depends>
+    <depends>com.intellij.modules.lang</depends>
 
-  <extensions defaultExtensionNs="com.intellij">
-    <fileTypeFactory implementation="winstanley.WdlFileTypeFactory"/>
-    <lang.parserDefinition language="wdl" implementationClass="winstanley.WdlParserDefinition"/>
-    <lang.syntaxHighlighterFactory language="wdl" implementationClass="winstanley.WdlSyntaxHighlighterFactory"/>
-    <lang.braceMatcher language="wdl" implementationClass="winstanley.WdlBraceMatcher"/>
-    <lang.commenter language="wdl" implementationClass="winstanley.WdlCommenter"/>
-    <lang.foldingBuilder language="wdl" implementationClass="winstanley.WdlFoldingBuilder"/>
-    <lang.formatter language="wdl" implementationClass="winstanley.formatting.WdlFormattingModelBuilder"/>
-    <colorSettingsPage implementation="winstanley.WdlColorSettingsPage"/>
-    <annotator language="wdl" implementationClass="winstanley.WdlAnnotator"/>
-  </extensions>
+    <extensions defaultExtensionNs="com.intellij">
+        <fileType name="Workflow Definition Language File" fieldName="INSTANCE" language="wdl"
+                  implementationClass="winstanley.WdlFileType"/>
+        <lang.parserDefinition language="wdl" implementationClass="winstanley.WdlParserDefinition"/>
+        <lang.syntaxHighlighterFactory language="wdl" implementationClass="winstanley.WdlSyntaxHighlighterFactory"/>
+        <lang.braceMatcher language="wdl" implementationClass="winstanley.WdlBraceMatcher"/>
+        <lang.commenter language="wdl" implementationClass="winstanley.WdlCommenter"/>
+        <lang.foldingBuilder language="wdl" implementationClass="winstanley.WdlFoldingBuilder"/>
+        <lang.formatter language="wdl" implementationClass="winstanley.formatting.WdlFormattingModelBuilder"/>
+        <colorSettingsPage implementation="winstanley.WdlColorSettingsPage"/>
+        <annotator language="wdl" implementationClass="winstanley.WdlAnnotator"/>
+    </extensions>
 
-  <actions>
-    <!-- Add your actions here -->
-  </actions>
+    <actions>
+        <!-- Add your actions here -->
+    </actions>
 
 </idea-plugin>

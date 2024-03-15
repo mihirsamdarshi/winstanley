@@ -2,10 +2,12 @@ package winstanley.structure
 
 import com.intellij.lang.ASTNode
 import com.intellij.openapi.util.TextRange
-import com.intellij.psi.{PsiElement, PsiFile}
+import com.intellij.psi.PsiElement
 import com.intellij.psi.tree.{IElementType, TokenSet}
 import winstanley.psi._
 import winstanley.psi.impl.WdlTaskBlockImpl
+
+import scala.annotation.tailrec
 
 object WdlImplicits {
   implicit final class EnhancedPsiElement(val psiElement: PsiElement) extends AnyVal {
@@ -49,6 +51,7 @@ object WdlImplicits {
         case b: WdlWfBodyElement if b.getCallBlock != null => findAliasOrCallDeclaration(b.getCallBlock)
         case other => other.findReferencesInInnerScopes
       }
+
       psiElement.getChildren.toSet flatMap expandChild
     }
 
@@ -98,13 +101,14 @@ object WdlImplicits {
     }
 
     /**
-      * Recurses until it has reached the PsiFile node and finds all task blocks, then returns the task declaration for
-      * each found task block.
-      */
+     * Recurses until it has reached the PsiFile node and finds all task blocks, then returns the task declaration for
+     * each found task block.
+     */
     def findTaskDeclarationsInScope: Set[WdlNamedTaskElement] = {
       psiElement.findTasksInScope.map(_.getTaskDeclaration).toSet
     }
 
+    @tailrec
     def findTasksInScope: Set[WdlTaskBlockImpl] = {
       val taskContainer = psiElement match {
         case p: WdlDraft2File => Some(p)

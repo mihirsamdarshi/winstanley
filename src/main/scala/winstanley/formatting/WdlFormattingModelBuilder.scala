@@ -1,15 +1,15 @@
 package winstanley.formatting
 
-import com.intellij.formatting.{Indent, _}
-import com.intellij.psi._
-import com.intellij.psi.codeStyle.CodeStyleSettings
+import com.intellij.formatting._
 import org.jetbrains.annotations._
 import winstanley.WdlLanguage
 
 class WdlFormattingModelBuilder extends FormattingModelBuilder {
 
   @NotNull
-  def createModel(element: PsiElement, settings: CodeStyleSettings): FormattingModel =
+  override def createModel(@NotNull formattingContext: FormattingContext): FormattingModel = {
+    val element = formattingContext.getPsiElement
+    val settings = formattingContext.getCodeStyleSettings
     FormattingModelProvider.createFormattingModelForPsiFile(
       element.getContainingFile,
       new WdlBlock(
@@ -21,4 +21,5 @@ class WdlFormattingModelBuilder extends FormattingModelBuilder {
       ),
       settings
     )
+  }
 }

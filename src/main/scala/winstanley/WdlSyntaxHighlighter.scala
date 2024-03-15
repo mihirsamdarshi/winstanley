@@ -2,31 +2,27 @@ package winstanley
 
 import com.intellij.lexer.Lexer
 import com.intellij.openapi.editor.DefaultLanguageHighlighterColors
-import com.intellij.openapi.editor.HighlighterColors
 import com.intellij.openapi.editor.colors.TextAttributesKey
-import com.intellij.openapi.fileTypes.SyntaxHighlighterBase
-import com.intellij.psi.TokenType
-import com.intellij.psi.tree.IElementType
-import winstanley.psi.WdlTypes
-import org.jetbrains.annotations.NotNull
 import com.intellij.openapi.editor.colors.TextAttributesKey._
+import com.intellij.openapi.fileTypes.SyntaxHighlighterBase
+import com.intellij.psi.tree.IElementType
+import org.jetbrains.annotations.NotNull
+import winstanley.psi.WdlTypes
 
 object WdlSyntaxHighlighter {
 
-  val mappings = Map (
+  val mappings = Map(
     WdlTypes.QUOTE -> DefaultLanguageHighlighterColors.STRING,
     WdlTypes.QUOTE_STRING_CHAR -> DefaultLanguageHighlighterColors.STRING,
     WdlTypes.ESCAPE_SEQUENCE -> DefaultLanguageHighlighterColors.VALID_STRING_ESCAPE,
     WdlTypes.COMMAND_CHAR -> DefaultLanguageHighlighterColors.CONSTANT,
     WdlTypes.BOOLEAN -> DefaultLanguageHighlighterColors.CONSTANT,
     WdlTypes.NUMBER -> DefaultLanguageHighlighterColors.NUMBER,
-
     WdlTypes.PRIMITIVE_TYPE -> DefaultLanguageHighlighterColors.METADATA,
     WdlTypes.OBJECT_TYPE -> DefaultLanguageHighlighterColors.METADATA,
     WdlTypes.ARRAY_TYPE -> DefaultLanguageHighlighterColors.METADATA,
     WdlTypes.MAP_TYPE -> DefaultLanguageHighlighterColors.METADATA,
     WdlTypes.PAIR_TYPE -> DefaultLanguageHighlighterColors.METADATA,
-
     WdlTypes.LBRACE -> DefaultLanguageHighlighterColors.BRACES,
     WdlTypes.RBRACE -> DefaultLanguageHighlighterColors.BRACES,
     WdlTypes.LPAREN -> DefaultLanguageHighlighterColors.PARENTHESES,
@@ -76,7 +72,6 @@ object WdlSyntaxHighlighter {
     WdlTypes.PARAMETER_META -> DefaultLanguageHighlighterColors.KEYWORD,
     WdlTypes.META -> DefaultLanguageHighlighterColors.KEYWORD,
     WdlTypes.OBJECT -> DefaultLanguageHighlighterColors.KEYWORD,
-
     WdlTypes.VERSION -> DefaultLanguageHighlighterColors.KEYWORD,
     WdlTypes.VERSION_IDENTIFIER -> DefaultLanguageHighlighterColors.CONSTANT,
     WdlTypes.STRUCT -> DefaultLanguageHighlighterColors.KEYWORD,
@@ -92,12 +87,14 @@ class WdlSyntaxHighlighter extends SyntaxHighlighterBase {
   override def getHighlightingLexer: Lexer = new WdlLexerAdapter()
 
   @NotNull
-  override def getTokenHighlights(tokenType: IElementType): Array[TextAttributesKey] = {
-    mappings find {
-      case (token, colors) =>
-        tokenType.equals(token)
-    } map { _._2} match {
-      case Some(x) => Seq(createTextAttributesKey(tokenType.toString, x)).toArray
+  override def getTokenHighlights(
+      tokenType: IElementType
+  ): Array[TextAttributesKey] = {
+    mappings find { case (token, colors) =>
+      tokenType.equals(token)
+    } map { _._2 } match {
+      case Some(x) =>
+        Seq(createTextAttributesKey(tokenType.toString, x)).toArray
       case None => Array.empty[TextAttributesKey]
     }
   }
